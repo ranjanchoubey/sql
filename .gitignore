@@ -42,3 +42,7 @@ wheels/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Don't ignore the main notebook files
+!sql-notes.ipynb
+!chapters/*.ipynb

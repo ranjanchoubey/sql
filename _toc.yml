@@ -7,7 +7,7 @@ options:
   numbered: true
 chapters:
 - file: chapters/chapter1
-  title: "SQL Fundamentals"
+  title: "Chapter 1: SQL Fundamentals"
   sections:
   - file: chapters/chapter1-1-setup
     title: "Database Setup and Connection"
@@ -17,13 +17,13 @@ chapters:
     title: "Basic SELECT Queries"
 
 - file: chapters/chapter2
-  title: "Advanced SQL Operations"
+  title: "Chapter 2: Intermediate SQL Operations"  
 
 - file: chapters/chapter3
-  title: "Window Functions and Analytics"
+  title: "Chapter 3: Advanced SQL & Window Functions"
 
 - file: chapters/chapter5
-  title: "Real-World SQL Projects"
+  title: "Chapter 5: Real-World SQL Projects"
   sections:
   - file: chapters/chapter5-1-data-analysis
     title: "Business Data Analysis"
