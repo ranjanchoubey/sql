@@ -3,6 +3,8 @@
 
 format: jb-book
 root: README
+options:
+  numbered: true
 chapters:
 - file: chapters/chapter1
   title: "Chapter 1: SQL Basics"

@@ -2,169 +2,132 @@
 
 A comprehensive Jupyter Book for learning SQL with hands-on examples using SQLite.
 
-## 🚀 Quick Start (GitHub Codespaces)
+## 📚 Table of Contents
 
-### Automated Setup
-For the fastest setup in GitHub Codespaces, run:
+This interactive learning journey is organized into three progressive chapters:
 
-```bash
-# Make scripts executable
-chmod +x setup.sh serve.sh rebuild.sh
+### [Chapter 1: SQL Basics](chapters/chapter1.ipynb)
+- Database Setup and Connection
+- Creating Tables and Data Types
+- Inserting Data
+- Basic SELECT Queries
+- Filtering with WHERE
+- Sorting Data with ORDER BY
 
-# Run the complete setup
-./setup.sh
-```
+### [Chapter 2: Intermediate SQL](chapters/chapter2.ipynb)
+- GROUP BY and Aggregate Functions
+- INNER JOINs - Combining Tables
+- LEFT and RIGHT JOINs
+- Advanced Filtering with HAVING
+- Multiple Table Operations
+- Practical Data Analysis Examples
 
-This will automatically:
-- ✅ Install all required Python packages
-- ✅ Build the Jupyter Book
-- ✅ Display your codespace access URL
-- ✅ Set up development scripts
+### [Chapter 3: Advanced SQL](chapters/chapter3.ipynb)
+- Subqueries and Correlated Queries
+- Common Table Expressions (CTEs)
+- Window Functions in Detail
+- Advanced Data Manipulation
+- Query Optimization Techniques
+- Real-world Analysis Scenarios
 
-### Access Your Book
-After running setup, your book will be available at:
-- **Live Server**: `https://your-codespace-name-5500.app.github.dev/_build/html/README.html`
-- **Python Server**: Run `./serve.sh` for `https://your-codespace-name-8000.app.github.dev/`
+## 🚀 Quick Start
 
-### Development Workflow
-```bash
-# After making changes to the notebook
-./rebuild.sh
+Choose your preferred learning environment:
 
-# Start local server (alternative to Live Server)
-./serve.sh
+### Option 1: GitHub Codespaces (Recommended)
+1. Open this repository in GitHub Codespaces
+2. Run the setup script:
+   ```bash
+   chmod +x setup.sh && ./setup.sh
+   ```
+3. Start with [Chapter 1: SQL Basics](chapters/chapter1.ipynb)
 
-# Watch for changes and auto-rebuild
-watchmedo shell-command --patterns="*.ipynb;*.md" --recursive --command='./rebuild.sh' .
-```
-
-## What You'll Learn
-
-This interactive notebook covers essential SQL concepts from beginner to intermediate level:
-
-- **Database Setup & Connection** - Setting up SQLite and connecting from Python
-- **Table Creation** - Creating structured tables with proper data types
-- **Data Insertion** - Adding sample data to work with
-- **Basic Queries** - SELECT statements and data retrieval
-- **Filtering & Sorting** - WHERE clauses, ORDER BY, and data organization
-- **Aggregations** - COUNT, SUM, AVG, and other aggregate functions
-- **Joins** - Combining data from multiple tables
-- **Advanced Topics** - Subqueries and complex data manipulation
-
-## Manual Setup (Local Development)
-
-### Prerequisites
-- Python 3.7+
-- Jupyter Notebook or JupyterLab
-- Git
-
-### Installation Steps
-1. **Clone this repository**
+### Option 2: Local Development
+1. Clone the repository:
    ```bash
    git clone https://github.com/ranjanchoubey/sql-notes.git
    cd sql-notes
    ```
-
-2. **Install dependencies**
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-
-3. **Build the Jupyter Book**
+3. Start Jupyter:
    ```bash
-   jupyter-book build .
+   jupyter notebook
    ```
 
-4. **View the book**
-   ```bash
-   # Option 1: Open in browser
-   open _build/html/README.html
-   
-   # Option 2: Start local server
-   cd _build/html && python -m http.server 8000
-   # Then visit: http://localhost:8000
-   ```
+## 🎯 Learning Path
 
+**For Beginners**: Start with Chapter 1 and work through each concept systematically.
 
-## Features
+**For Intermediate Users**: Jump to Chapter 2 if you're familiar with basic SQL syntax.
 
-- **Interactive Examples** - Run SQL queries directly in the notebook
-- **Sample Database** - Pre-populated with realistic company data
-- **Practice Exercises** - Test your knowledge with hands-on challenges
-- **Progressive Learning** - Concepts build upon each other systematically
-- **GitHub Codespaces Ready** - One-command setup for cloud development
+**For Advanced Practice**: Go directly to Chapter 3 for complex queries and optimization techniques.
 
-## Database Schema
+## 📊 Database Schema
 
-The notebook uses a sample company database with three main tables:
-- **departments** - Company departments with locations
-- **employees** - Employee information including salaries and department assignments  
-- **projects** - Project data with budgets and timelines
+All chapters use a consistent sample database with realistic company data:
 
-## Available Scripts
+```sql
+-- Departments table
+departments (dept_id, dept_name, location)
 
-| Script | Purpose |
-|--------|---------|
-| `./setup.sh` | Complete environment setup (run once) |
-| `./rebuild.sh` | Rebuild book after making changes |
-| `./serve.sh` | Start local development server |
+-- Employees table  
+employees (emp_id, first_name, last_name, email, hire_date, salary, dept_id)
 
-## Troubleshooting
+-- Projects table
+projects (project_id, project_name, start_date, end_date, budget, dept_id)
 
-### Common Issues
-
-**Build fails with missing packages:**
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
+-- Performance data (Chapter 3)
+employee_performance (emp_id, year, performance_score, bonus)
 ```
 
-**Permission denied on scripts:**
-```bash
-chmod +x setup.sh serve.sh rebuild.sh
-```
+## 🛠️ Interactive Features
 
-**Database connection issues:**
-- The `my_database.db` file should be in the root directory
-- Make sure you're running the notebook from the project root
+- **Live SQL Execution**: Run queries directly in the browser
+- **Sample Data**: Pre-populated realistic dataset
+- **Practice Exercises**: Hands-on challenges with solutions
+- **Progressive Difficulty**: Each chapter builds on the previous
+- **Visual Results**: Query outputs displayed as formatted tables
 
-**Codespace URL not working:**
-- Make sure your codespace is running
-- Try refreshing the page
-- Check if port forwarding is enabled in VS Code
+## 📖 How to Use This Book
 
-### Force Rebuild
-If you need to completely rebuild everything:
-```bash
-# Clean build directory
-rm -rf _build/
+1. **Read the explanations** for each SQL concept
+2. **Run the example code** to see results
+3. **Experiment** by modifying queries
+4. **Complete practice exercises** to test your understanding
+5. **Check your solutions** against provided examples
 
-# Full rebuild
-jupyter-book build . --all
-```
+## 🎓 What You'll Learn
 
-## Contributing
+By the end of this course, you'll be able to:
 
-Feel free to contribute by:
-- Adding more SQL examples
-- Improving explanations
-- Fixing any issues you find
-- Suggesting new topics to cover
+- Set up and connect to SQL databases
+- Write complex queries with multiple joins
+- Perform data analysis using aggregate functions
+- Optimize query performance
+- Handle real-world business scenarios
+- Build executive dashboards and reports
 
-### Development Setup
-1. Fork this repository
-2. Create a feature branch
-3. Make your changes
-4. Test with `./rebuild.sh`
-5. Submit a pull request
+## 🤝 Contributing
 
-## License
+We welcome contributions! You can:
+- Add more examples or exercises
+- Improve explanations
+- Fix any issues
+- Suggest new topics
+
+## 🆘 Getting Help
+
+- **Stuck on a concept?** Check the practice exercises for similar examples
+- **Technical issues?** Create an issue on GitHub
+- **Want to discuss?** Start a discussion in the repository
+
+## 📄 License
 
 This project is open source and available under the MIT License.
 
-## Support
+---
 
-- 📖 **Documentation**: Check the notebook cells for detailed explanations
-- 🐛 **Issues**: Report bugs via GitHub Issues
-- 💡 **Questions**: Start a discussion in GitHub Discussions
-- 🚀 **Quick Start**: Just run `./setup.sh` in your codespace!
+**Ready to start learning?** Begin with [Chapter 1: SQL Basics](chapters/chapter1.ipynb) 🚀
