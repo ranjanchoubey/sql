@@ -85,20 +85,6 @@ This interactive notebook covers essential SQL concepts from beginner to interme
    # Then visit: http://localhost:8000
    ```
 
-## File Structure
-
-```
-sql-notes/
-├── sql-notes.ipynb        # Main notebook with SQL examples
-├── my_database.db         # Sample SQLite database
-├── _config.yml           # Jupyter Book configuration
-├── _toc.yml              # Table of contents
-├── requirements.txt      # Python dependencies
-├── setup.sh              # Automated setup script
-├── serve.sh              # Local server script
-├── rebuild.sh            # Quick rebuild script
-└── README.md             # This file
-```
 
 ## Features
 

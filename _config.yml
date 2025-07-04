@@ -28,6 +28,22 @@ repository:
 html:
   use_issues_button: true
   use_repository_button: true
+  html_theme: sphinx_book_theme
+  html_theme_options:
+    repository_url: https://github.com/ranjanchoubey/sql-notes
+    use_repository_button: true
+    use_issues_button: true
+    use_edit_page_button: true
+    use_download_button: true
+    use_fullscreen_button: true
+    home_page_in_toc: false
+    show_navbar_depth: 2
+    logo:
+      text: "SQL Learning Notes"
+    # Color scheme
+    primary_sidebar_end: []
+    article_header_start: []
+    content_footer_items: []
 
 # Parse and render settings
 parse:
