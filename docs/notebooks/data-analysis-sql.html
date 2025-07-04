@@ -1,0 +1,2841 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2. Data Analysis with SQL &#8212; SQL Learning Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/data-analysis-sql';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="1. Advanced SQL Concepts" href="advanced-sql.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../README.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">SQL Learning Notes</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="advanced-sql.html">1. Advanced SQL Concepts</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Data Analysis with SQL</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/ranjanchoubey/sql-notes" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ranjanchoubey/sql-notes/edit/main/notebooks/data-analysis-sql.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ranjanchoubey/sql-notes/issues/new?title=Issue%20on%20page%20%2Fnotebooks/data-analysis-sql.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/data-analysis-sql.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Data Analysis with SQL</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics-covered">2.1. Topics Covered:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-and-extended-sample-data">2.2. Setup and Extended Sample Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploratory-data-analysis-eda">2.3. 1. Exploratory Data Analysis (EDA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series-analysis">2.4. 2. Time Series Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#business-metrics-and-kpis">2.5. 3. Business Metrics and KPIs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-analysis-and-correlation">2.6. 4. Performance Analysis and Correlation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-analytics-cohort-analysis">2.7. 5. Advanced Analytics - Cohort Analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-quality-assessment">2.8. 6. Data Quality Assessment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#executive-summary-report">2.9. 7. Executive Summary Report</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-exercises-data-analysis">2.10. 8. Practice Exercises - Data Analysis</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-analysis-challenges">2.10.1. Data Analysis Challenges:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="data-analysis-with-sql">
+<h1><span class="section-number">2. </span>Data Analysis with SQL<a class="headerlink" href="#data-analysis-with-sql" title="Link to this heading">#</a></h1>
+<p>This notebook demonstrates how to use SQL for real-world data analysis tasks. We’ll explore business scenarios and analytical techniques commonly used in data science and business intelligence.</p>
+<section id="topics-covered">
+<h2><span class="section-number">2.1. </span>Topics Covered:<a class="headerlink" href="#topics-covered" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Exploratory Data Analysis (EDA) with SQL</p></li>
+<li><p>Time Series Analysis</p></li>
+<li><p>Cohort Analysis</p></li>
+<li><p>Business Metrics Calculation</p></li>
+<li><p>Data Quality Assessment</p></li>
+<li><p>Statistical Analysis</p></li>
+<li><p>Report Generation</p></li>
+<li><p>Data Export and Visualization Setup</p></li>
+</ol>
+</section>
+<section id="setup-and-extended-sample-data">
+<h2><span class="section-number">2.2. </span>Setup and Extended Sample Data<a class="headerlink" href="#setup-and-extended-sample-data" title="Link to this heading">#</a></h2>
+<p>Let’s connect to our database and add some time-series data for analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="c1"># Connect to database</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;my_database.db&#39;</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;my_database.db&#39;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;../my_database.db&#39;</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;../my_database.db&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;my_database.db&#39;</span><span class="p">)</span>
+
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connected to database for data analysis!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create additional tables for analysis</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS sales_transactions (</span>
+<span class="s2">    transaction_id INTEGER PRIMARY KEY,</span>
+<span class="s2">    emp_id INTEGER,</span>
+<span class="s2">    sale_date DATE,</span>
+<span class="s2">    amount DECIMAL(10, 2),</span>
+<span class="s2">    customer_id INTEGER,</span>
+<span class="s2">    product_category VARCHAR(50),</span>
+<span class="s2">    FOREIGN KEY (emp_id) REFERENCES employees (emp_id)</span>
+<span class="s2">)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE IF NOT EXISTS performance_reviews (</span>
+<span class="s2">    review_id INTEGER PRIMARY KEY,</span>
+<span class="s2">    emp_id INTEGER,</span>
+<span class="s2">    review_date DATE,</span>
+<span class="s2">    performance_score INTEGER,</span>
+<span class="s2">    manager_rating INTEGER,</span>
+<span class="s2">    goals_met INTEGER,</span>
+<span class="s2">    FOREIGN KEY (emp_id) REFERENCES employees (emp_id)</span>
+<span class="s2">)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extended database schema created for analysis!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Connected to database for data analysis!
+Extended database schema created for analysis!
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate sample data for analysis</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="c1"># Generate sales transactions</span>
+<span class="n">sales_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">base_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">501</span><span class="p">):</span>  <span class="c1"># 500 transactions</span>
+    <span class="n">emp_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">days_offset</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">365</span><span class="p">)</span>
+    <span class="n">sale_date</span> <span class="o">=</span> <span class="n">base_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days_offset</span><span class="p">)</span>
+    <span class="n">amount</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">customer_id</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;Software&#39;</span><span class="p">,</span> <span class="s1">&#39;Hardware&#39;</span><span class="p">,</span> <span class="s1">&#39;Consulting&#39;</span><span class="p">,</span> <span class="s1">&#39;Training&#39;</span><span class="p">,</span> <span class="s1">&#39;Support&#39;</span><span class="p">])</span>
+    
+    <span class="n">sales_data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">emp_id</span><span class="p">,</span> <span class="n">sale_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">),</span> <span class="n">amount</span><span class="p">,</span> <span class="n">customer_id</span><span class="p">,</span> <span class="n">category</span><span class="p">))</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="s1">&#39;INSERT OR REPLACE INTO sales_transactions VALUES (?, ?, ?, ?, ?, ?)&#39;</span><span class="p">,</span> <span class="n">sales_data</span><span class="p">)</span>
+
+<span class="c1"># Generate performance reviews</span>
+<span class="n">review_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">emp_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">quarter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="n">review_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="n">quarter</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+        <span class="n">performance_score</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">manager_rating</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">goals_met</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        
+        <span class="n">review_data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="p">(</span><span class="n">emp_id</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">quarter</span><span class="p">,</span>
+            <span class="n">emp_id</span><span class="p">,</span>
+            <span class="n">review_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">),</span>
+            <span class="n">performance_score</span><span class="p">,</span>
+            <span class="n">manager_rating</span><span class="p">,</span>
+            <span class="n">goals_met</span>
+        <span class="p">))</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">executemany</span><span class="p">(</span><span class="s1">&#39;INSERT OR REPLACE INTO performance_reviews VALUES (?, ?, ?, ?, ?, ?)&#39;</span><span class="p">,</span> <span class="n">review_data</span><span class="p">)</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sales_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> sales transactions and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">review_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> performance reviews&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generated 500 sales transactions and 32 performance reviews
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="exploratory-data-analysis-eda">
+<h2><span class="section-number">2.3. </span>1. Exploratory Data Analysis (EDA)<a class="headerlink" href="#exploratory-data-analysis-eda" title="Link to this heading">#</a></h2>
+<p>Let’s start by understanding our data through summary statistics and distributions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data overview and summary statistics</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== DATABASE OVERVIEW ===&quot;</span><span class="p">)</span>
+
+<span class="c1"># Table sizes</span>
+<span class="n">tables_info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;employees&#39; as table_name, COUNT(*) as record_count FROM employees</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT &#39;departments&#39;, COUNT(*) FROM departments</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT &#39;projects&#39;, COUNT(*) FROM projects</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT &#39;sales_transactions&#39;, COUNT(*) FROM sales_transactions</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT &#39;performance_reviews&#39;, COUNT(*) FROM performance_reviews</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">tables_info</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== EMPLOYEE SALARY DISTRIBUTION ===&quot;</span><span class="p">)</span>
+<span class="n">salary_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    COUNT(*) as total_employees,</span>
+<span class="s2">    MIN(salary) as min_salary,</span>
+<span class="s2">    MAX(salary) as max_salary,</span>
+<span class="s2">    AVG(salary) as avg_salary,</span>
+<span class="s2">    ROUND(AVG(salary), 0) as avg_salary_rounded,</span>
+<span class="s2">    -- Approximate median using percentiles</span>
+<span class="s2">    (SELECT salary FROM employees ORDER BY salary LIMIT 1 OFFSET (SELECT COUNT(*)/2 FROM employees)) as median_salary</span>
+<span class="s2">FROM employees</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">salary_stats</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== SALES OVERVIEW ===&quot;</span><span class="p">)</span>
+<span class="n">sales_overview</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    COUNT(*) as total_transactions,</span>
+<span class="s2">    COUNT(DISTINCT emp_id) as active_sales_employees,</span>
+<span class="s2">    MIN(amount) as min_sale,</span>
+<span class="s2">    MAX(amount) as max_sale,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_sale,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as total_revenue,</span>
+<span class="s2">    COUNT(DISTINCT customer_id) as unique_customers</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">sales_overview</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== DATABASE OVERVIEW ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>table_name</th>
+      <th>record_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>employees</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>departments</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>projects</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>sales_transactions</td>
+      <td>500</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>performance_reviews</td>
+      <td>32</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== EMPLOYEE SALARY DISTRIBUTION ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_employees</th>
+      <th>min_salary</th>
+      <th>max_salary</th>
+      <th>avg_salary</th>
+      <th>avg_salary_rounded</th>
+      <th>median_salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>8</td>
+      <td>65000</td>
+      <td>95000</td>
+      <td>79625.0</td>
+      <td>79625.0</td>
+      <td>82000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== SALES OVERVIEW ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_transactions</th>
+      <th>active_sales_employees</th>
+      <th>min_sale</th>
+      <th>max_sale</th>
+      <th>avg_sale</th>
+      <th>total_revenue</th>
+      <th>unique_customers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>500</td>
+      <td>8</td>
+      <td>125.65</td>
+      <td>4981.63</td>
+      <td>2600.66</td>
+      <td>1300332.31</td>
+      <td>487</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Distribution analysis by categories</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== SALES BY PRODUCT CATEGORY ===&quot;</span><span class="p">)</span>
+<span class="n">category_analysis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    product_category,</span>
+<span class="s2">    COUNT(*) as transaction_count,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as total_revenue,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_transaction_size,</span>
+<span class="s2">    ROUND(SUM(amount) * 100.0 / (SELECT SUM(amount) FROM sales_transactions), 2) as revenue_percentage</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">GROUP BY product_category</span>
+<span class="s2">ORDER BY total_revenue DESC</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">category_analysis</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== DEPARTMENT PERFORMANCE COMPARISON ===&quot;</span><span class="p">)</span>
+<span class="n">dept_performance</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    COUNT(DISTINCT e.emp_id) as employee_count,</span>
+<span class="s2">    COALESCE(COUNT(s.transaction_id), 0) as total_sales,</span>
+<span class="s2">    COALESCE(ROUND(SUM(s.amount), 2), 0) as total_revenue,</span>
+<span class="s2">    COALESCE(ROUND(AVG(s.amount), 2), 0) as avg_sale_size,</span>
+<span class="s2">    ROUND(AVG(e.salary), 0) as avg_salary</span>
+<span class="s2">FROM departments d</span>
+<span class="s2">LEFT JOIN employees e ON d.dept_id = e.dept_id</span>
+<span class="s2">LEFT JOIN sales_transactions s ON e.emp_id = s.emp_id</span>
+<span class="s2">GROUP BY d.dept_id, d.dept_name</span>
+<span class="s2">ORDER BY total_revenue DESC</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">dept_performance</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== SALES BY PRODUCT CATEGORY ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>product_category</th>
+      <th>transaction_count</th>
+      <th>total_revenue</th>
+      <th>avg_transaction_size</th>
+      <th>revenue_percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Support</td>
+      <td>106</td>
+      <td>275037.59</td>
+      <td>2594.69</td>
+      <td>21.15</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Consulting</td>
+      <td>105</td>
+      <td>274673.66</td>
+      <td>2615.94</td>
+      <td>21.12</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Hardware</td>
+      <td>103</td>
+      <td>266482.97</td>
+      <td>2587.21</td>
+      <td>20.49</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Training</td>
+      <td>100</td>
+      <td>250567.97</td>
+      <td>2505.68</td>
+      <td>19.27</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Software</td>
+      <td>86</td>
+      <td>233570.12</td>
+      <td>2715.93</td>
+      <td>17.96</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== DEPARTMENT PERFORMANCE COMPARISON ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dept_name</th>
+      <th>employee_count</th>
+      <th>total_sales</th>
+      <th>total_revenue</th>
+      <th>avg_sale_size</th>
+      <th>avg_salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Engineering</td>
+      <td>3</td>
+      <td>180</td>
+      <td>463836.72</td>
+      <td>2576.87</td>
+      <td>82239.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Marketing</td>
+      <td>2</td>
+      <td>148</td>
+      <td>387174.61</td>
+      <td>2616.04</td>
+      <td>68264.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Finance</td>
+      <td>1</td>
+      <td>60</td>
+      <td>161128.67</td>
+      <td>2685.48</td>
+      <td>70000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sales</td>
+      <td>1</td>
+      <td>61</td>
+      <td>158949.73</td>
+      <td>2605.73</td>
+      <td>95000.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Human Resources</td>
+      <td>1</td>
+      <td>51</td>
+      <td>129242.58</td>
+      <td>2534.17</td>
+      <td>90000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="time-series-analysis">
+<h2><span class="section-number">2.4. </span>2. Time Series Analysis<a class="headerlink" href="#time-series-analysis" title="Link to this heading">#</a></h2>
+<p>Analyzing trends over time to understand business patterns and seasonality.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Monthly sales trends</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== MONTHLY SALES TRENDS ===&quot;</span><span class="p">)</span>
+<span class="n">monthly_trends</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    strftime(&#39;%Y-%m&#39;, sale_date) as month,</span>
+<span class="s2">    COUNT(*) as transaction_count,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as monthly_revenue,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_transaction_size,</span>
+<span class="s2">    COUNT(DISTINCT emp_id) as active_employees,</span>
+<span class="s2">    COUNT(DISTINCT customer_id) as unique_customers</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">GROUP BY strftime(&#39;%Y-%m&#39;, sale_date)</span>
+<span class="s2">ORDER BY month</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">monthly_trends</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== QUARTERLY PERFORMANCE TRENDS ===&quot;</span><span class="p">)</span>
+<span class="n">quarterly_trends</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN strftime(&#39;%m&#39;, sale_date) IN (&#39;01&#39;, &#39;02&#39;, &#39;03&#39;) THEN &#39;Q1&#39;</span>
+<span class="s2">        WHEN strftime(&#39;%m&#39;, sale_date) IN (&#39;04&#39;, &#39;05&#39;, &#39;06&#39;) THEN &#39;Q2&#39;</span>
+<span class="s2">        WHEN strftime(&#39;%m&#39;, sale_date) IN (&#39;07&#39;, &#39;08&#39;, &#39;09&#39;) THEN &#39;Q3&#39;</span>
+<span class="s2">        ELSE &#39;Q4&#39;</span>
+<span class="s2">    END as quarter,</span>
+<span class="s2">    COUNT(*) as transactions,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as revenue,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_size</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">WHERE strftime(&#39;%Y&#39;, sale_date) = &#39;2023&#39;</span>
+<span class="s2">GROUP BY quarter</span>
+<span class="s2">ORDER BY quarter</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">quarterly_trends</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== MONTHLY SALES TRENDS ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>month</th>
+      <th>transaction_count</th>
+      <th>monthly_revenue</th>
+      <th>avg_transaction_size</th>
+      <th>active_employees</th>
+      <th>unique_customers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2023-01</td>
+      <td>36</td>
+      <td>92416.15</td>
+      <td>2567.12</td>
+      <td>8</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2023-02</td>
+      <td>35</td>
+      <td>97661.71</td>
+      <td>2790.33</td>
+      <td>8</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2023-03</td>
+      <td>37</td>
+      <td>93387.27</td>
+      <td>2523.98</td>
+      <td>7</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2023-04</td>
+      <td>40</td>
+      <td>90713.43</td>
+      <td>2267.84</td>
+      <td>8</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2023-05</td>
+      <td>44</td>
+      <td>123261.62</td>
+      <td>2801.40</td>
+      <td>8</td>
+      <td>43</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2023-06</td>
+      <td>45</td>
+      <td>114873.61</td>
+      <td>2552.75</td>
+      <td>7</td>
+      <td>45</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2023-07</td>
+      <td>41</td>
+      <td>112348.59</td>
+      <td>2740.21</td>
+      <td>8</td>
+      <td>41</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2023-08</td>
+      <td>54</td>
+      <td>143385.22</td>
+      <td>2655.28</td>
+      <td>8</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2023-09</td>
+      <td>42</td>
+      <td>119662.57</td>
+      <td>2849.11</td>
+      <td>8</td>
+      <td>42</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2023-10</td>
+      <td>44</td>
+      <td>111349.36</td>
+      <td>2530.67</td>
+      <td>8</td>
+      <td>43</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2023-11</td>
+      <td>43</td>
+      <td>107371.07</td>
+      <td>2497.00</td>
+      <td>8</td>
+      <td>43</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2023-12</td>
+      <td>37</td>
+      <td>87200.65</td>
+      <td>2356.77</td>
+      <td>8</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2024-01</td>
+      <td>2</td>
+      <td>6701.06</td>
+      <td>3350.53</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== QUARTERLY PERFORMANCE TRENDS ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>quarter</th>
+      <th>transactions</th>
+      <th>revenue</th>
+      <th>avg_size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Q1</td>
+      <td>108</td>
+      <td>283465.13</td>
+      <td>2624.68</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Q2</td>
+      <td>129</td>
+      <td>328848.66</td>
+      <td>2549.21</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Q3</td>
+      <td>137</td>
+      <td>375396.38</td>
+      <td>2740.12</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Q4</td>
+      <td>124</td>
+      <td>305921.08</td>
+      <td>2467.11</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Day of week analysis</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== DAY OF WEEK ANALYSIS ===&quot;</span><span class="p">)</span>
+<span class="n">dow_analysis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    CASE strftime(&#39;%w&#39;, sale_date)</span>
+<span class="s2">        WHEN &#39;0&#39; THEN &#39;Sunday&#39;</span>
+<span class="s2">        WHEN &#39;1&#39; THEN &#39;Monday&#39;</span>
+<span class="s2">        WHEN &#39;2&#39; THEN &#39;Tuesday&#39;</span>
+<span class="s2">        WHEN &#39;3&#39; THEN &#39;Wednesday&#39;</span>
+<span class="s2">        WHEN &#39;4&#39; THEN &#39;Thursday&#39;</span>
+<span class="s2">        WHEN &#39;5&#39; THEN &#39;Friday&#39;</span>
+<span class="s2">        WHEN &#39;6&#39; THEN &#39;Saturday&#39;</span>
+<span class="s2">    END as day_of_week,</span>
+<span class="s2">    COUNT(*) as transaction_count,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as total_revenue,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_transaction</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">GROUP BY strftime(&#39;%w&#39;, sale_date)</span>
+<span class="s2">ORDER BY strftime(&#39;%w&#39;, sale_date)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">dow_analysis</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== EMPLOYEE SALES PERFORMANCE OVER TIME ===&quot;</span><span class="p">)</span>
+<span class="n">employee_trends</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e.first_name || &#39; &#39; || e.last_name as employee,</span>
+<span class="s2">    strftime(&#39;%Y-%m&#39;, s.sale_date) as month,</span>
+<span class="s2">    COUNT(s.transaction_id) as sales_count,</span>
+<span class="s2">    ROUND(SUM(s.amount), 2) as monthly_sales</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">LEFT JOIN sales_transactions s ON e.emp_id = s.emp_id</span>
+<span class="s2">WHERE s.sale_date IS NOT NULL</span>
+<span class="s2">GROUP BY e.emp_id, strftime(&#39;%Y-%m&#39;, s.sale_date)</span>
+<span class="s2">ORDER BY employee, month</span>
+<span class="s2">LIMIT 20  -- Show first 20 records</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">employee_trends</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== DAY OF WEEK ANALYSIS ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>day_of_week</th>
+      <th>transaction_count</th>
+      <th>total_revenue</th>
+      <th>avg_transaction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Sunday</td>
+      <td>67</td>
+      <td>152328.69</td>
+      <td>2273.56</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Monday</td>
+      <td>90</td>
+      <td>244722.27</td>
+      <td>2719.14</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Tuesday</td>
+      <td>69</td>
+      <td>189944.87</td>
+      <td>2752.82</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Wednesday</td>
+      <td>57</td>
+      <td>156300.21</td>
+      <td>2742.11</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Thursday</td>
+      <td>78</td>
+      <td>172478.73</td>
+      <td>2211.27</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Friday</td>
+      <td>78</td>
+      <td>217893.15</td>
+      <td>2793.50</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Saturday</td>
+      <td>61</td>
+      <td>166664.39</td>
+      <td>2732.20</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== EMPLOYEE SALES PERFORMANCE OVER TIME ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>employee</th>
+      <th>month</th>
+      <th>sales_count</th>
+      <th>monthly_sales</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>David Brown</td>
+      <td>2023-01</td>
+      <td>2</td>
+      <td>8653.62</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>David Brown</td>
+      <td>2023-02</td>
+      <td>8</td>
+      <td>20599.13</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>David Brown</td>
+      <td>2023-03</td>
+      <td>1</td>
+      <td>125.65</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>David Brown</td>
+      <td>2023-04</td>
+      <td>6</td>
+      <td>12404.25</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>David Brown</td>
+      <td>2023-05</td>
+      <td>8</td>
+      <td>19402.73</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>David Brown</td>
+      <td>2023-06</td>
+      <td>6</td>
+      <td>20739.12</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>David Brown</td>
+      <td>2023-07</td>
+      <td>2</td>
+      <td>1912.41</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>David Brown</td>
+      <td>2023-08</td>
+      <td>5</td>
+      <td>12635.13</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>David Brown</td>
+      <td>2023-09</td>
+      <td>9</td>
+      <td>23202.75</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>David Brown</td>
+      <td>2023-10</td>
+      <td>3</td>
+      <td>10025.49</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>David Brown</td>
+      <td>2023-11</td>
+      <td>7</td>
+      <td>18189.79</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>David Brown</td>
+      <td>2023-12</td>
+      <td>4</td>
+      <td>11059.66</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Emily Davis</td>
+      <td>2023-01</td>
+      <td>3</td>
+      <td>3633.59</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Emily Davis</td>
+      <td>2023-02</td>
+      <td>1</td>
+      <td>3439.28</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Emily Davis</td>
+      <td>2023-03</td>
+      <td>8</td>
+      <td>28547.26</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Emily Davis</td>
+      <td>2023-04</td>
+      <td>4</td>
+      <td>11171.56</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Emily Davis</td>
+      <td>2023-05</td>
+      <td>4</td>
+      <td>10648.22</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Emily Davis</td>
+      <td>2023-06</td>
+      <td>4</td>
+      <td>5228.04</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Emily Davis</td>
+      <td>2023-07</td>
+      <td>9</td>
+      <td>29025.50</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Emily Davis</td>
+      <td>2023-08</td>
+      <td>7</td>
+      <td>15614.10</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="business-metrics-and-kpis">
+<h2><span class="section-number">2.5. </span>3. Business Metrics and KPIs<a class="headerlink" href="#business-metrics-and-kpis" title="Link to this heading">#</a></h2>
+<p>Calculate key performance indicators commonly used in business analysis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Key Performance Indicators</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== KEY PERFORMANCE INDICATORS ===&quot;</span><span class="p">)</span>
+
+<span class="c1"># Employee productivity metrics</span>
+<span class="n">productivity_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH employee_sales AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        e.emp_id,</span>
+<span class="s2">        e.first_name || &#39; &#39; || e.last_name as employee,</span>
+<span class="s2">        e.salary,</span>
+<span class="s2">        d.dept_name,</span>
+<span class="s2">        COUNT(s.transaction_id) as total_sales,</span>
+<span class="s2">        COALESCE(SUM(s.amount), 0) as total_revenue,</span>
+<span class="s2">        COALESCE(ROUND(AVG(s.amount), 2), 0) as avg_sale_size</span>
+<span class="s2">    FROM employees e</span>
+<span class="s2">    LEFT JOIN sales_transactions s ON e.emp_id = s.emp_id</span>
+<span class="s2">    LEFT JOIN departments d ON e.dept_id = d.dept_id</span>
+<span class="s2">    GROUP BY e.emp_id, e.first_name, e.last_name, e.salary, d.dept_name</span>
+<span class="s2">)</span>
+<span class="s2">SELECT </span>
+<span class="s2">    employee,</span>
+<span class="s2">    dept_name,</span>
+<span class="s2">    salary,</span>
+<span class="s2">    total_sales,</span>
+<span class="s2">    total_revenue,</span>
+<span class="s2">    avg_sale_size,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN total_sales &gt; 0 THEN ROUND(total_revenue / total_sales, 2)</span>
+<span class="s2">        ELSE 0 </span>
+<span class="s2">    END as revenue_per_sale,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN salary &gt; 0 THEN ROUND(total_revenue / salary * 100, 2)</span>
+<span class="s2">        ELSE 0 </span>
+<span class="s2">    END as roi_percentage</span>
+<span class="s2">FROM employee_sales</span>
+<span class="s2">ORDER BY total_revenue DESC</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">productivity_metrics</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== DEPARTMENT ROI ANALYSIS ===&quot;</span><span class="p">)</span>
+<span class="n">dept_roi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    COUNT(DISTINCT e.emp_id) as employee_count,</span>
+<span class="s2">    ROUND(SUM(e.salary), 2) as total_salary_cost,</span>
+<span class="s2">    COALESCE(ROUND(SUM(s.amount), 2), 0) as total_revenue,</span>
+<span class="s2">    COALESCE(ROUND(SUM(s.amount) - SUM(e.salary), 2), 0) as net_profit,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN SUM(e.salary) &gt; 0 THEN ROUND((COALESCE(SUM(s.amount), 0) / SUM(e.salary) - 1) * 100, 2)</span>
+<span class="s2">        ELSE 0 </span>
+<span class="s2">    END as roi_percentage</span>
+<span class="s2">FROM departments d</span>
+<span class="s2">LEFT JOIN employees e ON d.dept_id = e.dept_id</span>
+<span class="s2">LEFT JOIN sales_transactions s ON e.emp_id = s.emp_id</span>
+<span class="s2">GROUP BY d.dept_id, d.dept_name</span>
+<span class="s2">ORDER BY roi_percentage DESC</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">dept_roi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== KEY PERFORMANCE INDICATORS ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>employee</th>
+      <th>dept_name</th>
+      <th>salary</th>
+      <th>total_sales</th>
+      <th>total_revenue</th>
+      <th>avg_sale_size</th>
+      <th>revenue_per_sale</th>
+      <th>roi_percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mike Johnson</td>
+      <td>Marketing</td>
+      <td>65000</td>
+      <td>79</td>
+      <td>217919.55</td>
+      <td>2758.48</td>
+      <td>2758.48</td>
+      <td>335.26</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Jane Smith</td>
+      <td>Engineering</td>
+      <td>82000</td>
+      <td>71</td>
+      <td>185686.09</td>
+      <td>2615.30</td>
+      <td>2615.30</td>
+      <td>226.45</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Lisa Anderson</td>
+      <td>Marketing</td>
+      <td>72000</td>
+      <td>69</td>
+      <td>169255.06</td>
+      <td>2452.97</td>
+      <td>2452.97</td>
+      <td>235.08</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Robert Wilson</td>
+      <td>Engineering</td>
+      <td>88000</td>
+      <td>62</td>
+      <td>163624.98</td>
+      <td>2639.11</td>
+      <td>2639.11</td>
+      <td>185.94</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Emily Davis</td>
+      <td>Finance</td>
+      <td>70000</td>
+      <td>60</td>
+      <td>161128.67</td>
+      <td>2685.48</td>
+      <td>2685.48</td>
+      <td>230.18</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>David Brown</td>
+      <td>Sales</td>
+      <td>95000</td>
+      <td>61</td>
+      <td>158949.73</td>
+      <td>2605.73</td>
+      <td>2605.73</td>
+      <td>167.32</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Sarah Williams</td>
+      <td>Human Resources</td>
+      <td>90000</td>
+      <td>51</td>
+      <td>129242.58</td>
+      <td>2534.17</td>
+      <td>2534.17</td>
+      <td>143.60</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>John Doe</td>
+      <td>Engineering</td>
+      <td>75000</td>
+      <td>47</td>
+      <td>114525.65</td>
+      <td>2436.72</td>
+      <td>2436.72</td>
+      <td>152.70</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== DEPARTMENT ROI ANALYSIS ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dept_name</th>
+      <th>employee_count</th>
+      <th>total_salary_cost</th>
+      <th>total_revenue</th>
+      <th>net_profit</th>
+      <th>roi_percentage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Finance</td>
+      <td>1</td>
+      <td>4200000.0</td>
+      <td>161128.67</td>
+      <td>-4038871.33</td>
+      <td>-96.16</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Marketing</td>
+      <td>2</td>
+      <td>10103000.0</td>
+      <td>387174.61</td>
+      <td>-9715825.39</td>
+      <td>-96.17</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Engineering</td>
+      <td>3</td>
+      <td>14803000.0</td>
+      <td>463836.72</td>
+      <td>-14339163.28</td>
+      <td>-96.87</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Human Resources</td>
+      <td>1</td>
+      <td>4590000.0</td>
+      <td>129242.58</td>
+      <td>-4460757.42</td>
+      <td>-97.18</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Sales</td>
+      <td>1</td>
+      <td>5795000.0</td>
+      <td>158949.73</td>
+      <td>-5636050.27</td>
+      <td>-97.26</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Customer and sales analytics</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== CUSTOMER ANALYTICS ===&quot;</span><span class="p">)</span>
+
+<span class="n">customer_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    COUNT(DISTINCT customer_id) as total_customers,</span>
+<span class="s2">    COUNT(*) as total_transactions,</span>
+<span class="s2">    ROUND(AVG(transactions_per_customer), 2) as avg_transactions_per_customer,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as total_revenue,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_transaction_value,</span>
+<span class="s2">    ROUND(SUM(amount) / COUNT(DISTINCT customer_id), 2) as avg_customer_value</span>
+<span class="s2">FROM (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        customer_id,</span>
+<span class="s2">        COUNT(*) as transactions_per_customer,</span>
+<span class="s2">        SUM(amount) as amount</span>
+<span class="s2">    FROM sales_transactions</span>
+<span class="s2">    GROUP BY customer_id</span>
+<span class="s2">) customer_summary</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">customer_metrics</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== TOP CUSTOMERS BY VALUE ===&quot;</span><span class="p">)</span>
+<span class="n">top_customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    customer_id,</span>
+<span class="s2">    COUNT(*) as transaction_count,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as total_spent,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_transaction,</span>
+<span class="s2">    MIN(sale_date) as first_purchase,</span>
+<span class="s2">    MAX(sale_date) as last_purchase</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">GROUP BY customer_id</span>
+<span class="s2">ORDER BY total_spent DESC</span>
+<span class="s2">LIMIT 10</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">top_customers</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== CUSTOMER ANALYTICS ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>total_customers</th>
+      <th>total_transactions</th>
+      <th>avg_transactions_per_customer</th>
+      <th>total_revenue</th>
+      <th>avg_transaction_value</th>
+      <th>avg_customer_value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>487</td>
+      <td>487</td>
+      <td>1.03</td>
+      <td>1300332.31</td>
+      <td>2670.09</td>
+      <td>2670.09</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== TOP CUSTOMERS BY VALUE ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>transaction_count</th>
+      <th>total_spent</th>
+      <th>avg_transaction</th>
+      <th>first_purchase</th>
+      <th>last_purchase</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1844</td>
+      <td>2</td>
+      <td>7355.59</td>
+      <td>3677.80</td>
+      <td>2023-07-18</td>
+      <td>2023-11-26</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>8275</td>
+      <td>2</td>
+      <td>7225.59</td>
+      <td>3612.80</td>
+      <td>2023-08-08</td>
+      <td>2023-09-15</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6182</td>
+      <td>2</td>
+      <td>6672.69</td>
+      <td>3336.35</td>
+      <td>2023-08-02</td>
+      <td>2023-12-23</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1978</td>
+      <td>2</td>
+      <td>6148.50</td>
+      <td>3074.25</td>
+      <td>2023-05-04</td>
+      <td>2023-05-23</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>6125</td>
+      <td>2</td>
+      <td>5100.94</td>
+      <td>2550.47</td>
+      <td>2023-06-11</td>
+      <td>2023-12-04</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>7446</td>
+      <td>1</td>
+      <td>4981.63</td>
+      <td>4981.63</td>
+      <td>2023-12-09</td>
+      <td>2023-12-09</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>3456</td>
+      <td>1</td>
+      <td>4964.36</td>
+      <td>4964.36</td>
+      <td>2023-01-28</td>
+      <td>2023-01-28</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>6085</td>
+      <td>2</td>
+      <td>4943.51</td>
+      <td>2471.76</td>
+      <td>2023-10-27</td>
+      <td>2023-10-29</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2027</td>
+      <td>1</td>
+      <td>4928.20</td>
+      <td>4928.20</td>
+      <td>2023-02-16</td>
+      <td>2023-02-16</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9405</td>
+      <td>1</td>
+      <td>4918.79</td>
+      <td>4918.79</td>
+      <td>2023-09-15</td>
+      <td>2023-09-15</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="performance-analysis-and-correlation">
+<h2><span class="section-number">2.6. </span>4. Performance Analysis and Correlation<a class="headerlink" href="#performance-analysis-and-correlation" title="Link to this heading">#</a></h2>
+<p>Analyzing relationships between different metrics and performance indicators.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Performance correlation analysis</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== SALARY vs PERFORMANCE CORRELATION ===&quot;</span><span class="p">)</span>
+
+<span class="n">performance_correlation</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e.first_name || &#39; &#39; || e.last_name as employee,</span>
+<span class="s2">    e.salary,</span>
+<span class="s2">    ROUND(AVG(pr.performance_score), 1) as avg_performance_score,</span>
+<span class="s2">    ROUND(AVG(pr.manager_rating), 1) as avg_manager_rating,</span>
+<span class="s2">    ROUND(AVG(pr.goals_met), 1) as avg_goals_met,</span>
+<span class="s2">    COUNT(DISTINCT s.transaction_id) as total_sales,</span>
+<span class="s2">    COALESCE(ROUND(SUM(s.amount), 2), 0) as total_revenue</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">LEFT JOIN performance_reviews pr ON e.emp_id = pr.emp_id</span>
+<span class="s2">LEFT JOIN sales_transactions s ON e.emp_id = s.emp_id</span>
+<span class="s2">GROUP BY e.emp_id, e.first_name, e.last_name, e.salary</span>
+<span class="s2">ORDER BY e.salary DESC</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">performance_correlation</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== PERFORMANCE TRENDS BY QUARTER ===&quot;</span><span class="p">)</span>
+<span class="n">quarterly_performance</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;Q&#39; || CASE </span>
+<span class="s2">        WHEN strftime(&#39;%m&#39;, review_date) IN (&#39;01&#39;, &#39;02&#39;, &#39;03&#39;) THEN &#39;1&#39;</span>
+<span class="s2">        WHEN strftime(&#39;%m&#39;, review_date) IN (&#39;04&#39;, &#39;05&#39;, &#39;06&#39;) THEN &#39;2&#39;</span>
+<span class="s2">        WHEN strftime(&#39;%m&#39;, review_date) IN (&#39;07&#39;, &#39;08&#39;, &#39;09&#39;) THEN &#39;3&#39;</span>
+<span class="s2">        ELSE &#39;4&#39;</span>
+<span class="s2">    END as quarter,</span>
+<span class="s2">    COUNT(*) as review_count,</span>
+<span class="s2">    ROUND(AVG(performance_score), 1) as avg_performance,</span>
+<span class="s2">    ROUND(AVG(manager_rating), 1) as avg_manager_rating,</span>
+<span class="s2">    ROUND(AVG(goals_met), 1) as avg_goals_met</span>
+<span class="s2">FROM performance_reviews</span>
+<span class="s2">GROUP BY quarter</span>
+<span class="s2">ORDER BY quarter</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">quarterly_performance</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== SALARY vs PERFORMANCE CORRELATION ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>employee</th>
+      <th>salary</th>
+      <th>avg_performance_score</th>
+      <th>avg_manager_rating</th>
+      <th>avg_goals_met</th>
+      <th>total_sales</th>
+      <th>total_revenue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>David Brown</td>
+      <td>95000</td>
+      <td>79.0</td>
+      <td>4.3</td>
+      <td>77.5</td>
+      <td>61</td>
+      <td>635798.92</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Sarah Williams</td>
+      <td>90000</td>
+      <td>80.8</td>
+      <td>4.5</td>
+      <td>77.3</td>
+      <td>51</td>
+      <td>516970.32</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Robert Wilson</td>
+      <td>88000</td>
+      <td>80.5</td>
+      <td>3.8</td>
+      <td>74.3</td>
+      <td>62</td>
+      <td>654499.92</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Jane Smith</td>
+      <td>82000</td>
+      <td>84.5</td>
+      <td>3.8</td>
+      <td>71.3</td>
+      <td>71</td>
+      <td>742744.36</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>John Doe</td>
+      <td>75000</td>
+      <td>81.8</td>
+      <td>4.5</td>
+      <td>73.3</td>
+      <td>47</td>
+      <td>458102.60</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Lisa Anderson</td>
+      <td>72000</td>
+      <td>79.3</td>
+      <td>4.0</td>
+      <td>81.3</td>
+      <td>69</td>
+      <td>677020.24</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Emily Davis</td>
+      <td>70000</td>
+      <td>78.5</td>
+      <td>4.3</td>
+      <td>83.0</td>
+      <td>60</td>
+      <td>644514.68</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Mike Johnson</td>
+      <td>65000</td>
+      <td>78.8</td>
+      <td>4.8</td>
+      <td>88.3</td>
+      <td>79</td>
+      <td>871678.20</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== PERFORMANCE TRENDS BY QUARTER ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>quarter</th>
+      <th>review_count</th>
+      <th>avg_performance</th>
+      <th>avg_manager_rating</th>
+      <th>avg_goals_met</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Q1</td>
+      <td>8</td>
+      <td>80.9</td>
+      <td>4.1</td>
+      <td>82.1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Q2</td>
+      <td>8</td>
+      <td>78.8</td>
+      <td>4.4</td>
+      <td>70.4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Q3</td>
+      <td>8</td>
+      <td>82.5</td>
+      <td>4.5</td>
+      <td>80.3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Q4</td>
+      <td>8</td>
+      <td>79.4</td>
+      <td>3.9</td>
+      <td>80.3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="advanced-analytics-cohort-analysis">
+<h2><span class="section-number">2.7. </span>5. Advanced Analytics - Cohort Analysis<a class="headerlink" href="#advanced-analytics-cohort-analysis" title="Link to this heading">#</a></h2>
+<p>Analyzing customer behavior and retention patterns over time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Customer cohort analysis (simplified)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== CUSTOMER ACQUISITION BY MONTH ===&quot;</span><span class="p">)</span>
+
+<span class="n">customer_cohorts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH first_purchases AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        customer_id,</span>
+<span class="s2">        strftime(&#39;%Y-%m&#39;, MIN(sale_date)) as cohort_month,</span>
+<span class="s2">        MIN(sale_date) as first_purchase_date</span>
+<span class="s2">    FROM sales_transactions</span>
+<span class="s2">    GROUP BY customer_id</span>
+<span class="s2">),</span>
+<span class="s2">monthly_customers AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        cohort_month,</span>
+<span class="s2">        COUNT(*) as new_customers</span>
+<span class="s2">    FROM first_purchases</span>
+<span class="s2">    GROUP BY cohort_month</span>
+<span class="s2">)</span>
+<span class="s2">SELECT </span>
+<span class="s2">    cohort_month,</span>
+<span class="s2">    new_customers,</span>
+<span class="s2">    SUM(new_customers) OVER (ORDER BY cohort_month) as cumulative_customers</span>
+<span class="s2">FROM monthly_customers</span>
+<span class="s2">ORDER BY cohort_month</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">customer_cohorts</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== REPEAT CUSTOMER ANALYSIS ===&quot;</span><span class="p">)</span>
+<span class="n">repeat_customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH customer_behavior AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        customer_id,</span>
+<span class="s2">        COUNT(*) as purchase_count,</span>
+<span class="s2">        ROUND(SUM(amount), 2) as total_spent,</span>
+<span class="s2">        julianday(MAX(sale_date)) - julianday(MIN(sale_date)) as days_active</span>
+<span class="s2">    FROM sales_transactions</span>
+<span class="s2">    GROUP BY customer_id</span>
+<span class="s2">)</span>
+<span class="s2">SELECT </span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN purchase_count = 1 THEN &#39;One-time&#39;</span>
+<span class="s2">        WHEN purchase_count BETWEEN 2 AND 5 THEN &#39;Occasional (2-5)&#39;</span>
+<span class="s2">        WHEN purchase_count BETWEEN 6 AND 10 THEN &#39;Regular (6-10)&#39;</span>
+<span class="s2">        ELSE &#39;Frequent (10+)&#39;</span>
+<span class="s2">    END as customer_type,</span>
+<span class="s2">    COUNT(*) as customer_count,</span>
+<span class="s2">    ROUND(AVG(total_spent), 2) as avg_total_spent,</span>
+<span class="s2">    ROUND(AVG(days_active), 1) as avg_days_active</span>
+<span class="s2">FROM customer_behavior</span>
+<span class="s2">GROUP BY customer_type</span>
+<span class="s2">ORDER BY </span>
+<span class="s2">    CASE customer_type</span>
+<span class="s2">        WHEN &#39;Frequent (10+)&#39; THEN 1</span>
+<span class="s2">        WHEN &#39;Regular (6-10)&#39; THEN 2</span>
+<span class="s2">        WHEN &#39;Occasional (2-5)&#39; THEN 3</span>
+<span class="s2">        ELSE 4</span>
+<span class="s2">    END</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">repeat_customers</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== CUSTOMER ACQUISITION BY MONTH ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cohort_month</th>
+      <th>new_customers</th>
+      <th>cumulative_customers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2023-01</td>
+      <td>36</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2023-02</td>
+      <td>35</td>
+      <td>71</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2023-03</td>
+      <td>36</td>
+      <td>107</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2023-04</td>
+      <td>40</td>
+      <td>147</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2023-05</td>
+      <td>42</td>
+      <td>189</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2023-06</td>
+      <td>45</td>
+      <td>234</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2023-07</td>
+      <td>41</td>
+      <td>275</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2023-08</td>
+      <td>52</td>
+      <td>327</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2023-09</td>
+      <td>41</td>
+      <td>368</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2023-10</td>
+      <td>42</td>
+      <td>410</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2023-11</td>
+      <td>41</td>
+      <td>451</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2023-12</td>
+      <td>34</td>
+      <td>485</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2024-01</td>
+      <td>2</td>
+      <td>487</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== REPEAT CUSTOMER ANALYSIS ===
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_type</th>
+      <th>customer_count</th>
+      <th>avg_total_spent</th>
+      <th>avg_days_active</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Occasional (2-5)</td>
+      <td>13</td>
+      <td>4902.62</td>
+      <td>92.8</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>One-time</td>
+      <td>474</td>
+      <td>2608.86</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="data-quality-assessment">
+<h2><span class="section-number">2.8. </span>6. Data Quality Assessment<a class="headerlink" href="#data-quality-assessment" title="Link to this heading">#</a></h2>
+<p>Identifying data quality issues and inconsistencies in your dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data quality checks</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== DATA QUALITY ASSESSMENT ===&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. Missing or NULL values:&quot;</span><span class="p">)</span>
+<span class="n">null_check</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;employees&#39; as table_name,</span>
+<span class="s2">    SUM(CASE WHEN first_name IS NULL THEN 1 ELSE 0 END) as null_first_name,</span>
+<span class="s2">    SUM(CASE WHEN last_name IS NULL THEN 1 ELSE 0 END) as null_last_name,</span>
+<span class="s2">    SUM(CASE WHEN email IS NULL THEN 1 ELSE 0 END) as null_email,</span>
+<span class="s2">    SUM(CASE WHEN salary IS NULL THEN 1 ELSE 0 END) as null_salary</span>
+<span class="s2">FROM employees</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;sales_transactions&#39;,</span>
+<span class="s2">    SUM(CASE WHEN emp_id IS NULL THEN 1 ELSE 0 END),</span>
+<span class="s2">    SUM(CASE WHEN sale_date IS NULL THEN 1 ELSE 0 END),</span>
+<span class="s2">    SUM(CASE WHEN amount IS NULL THEN 1 ELSE 0 END),</span>
+<span class="s2">    SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">null_check</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2. Duplicate records check:&quot;</span><span class="p">)</span>
+<span class="n">duplicate_check</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;employees&#39; as table_name,</span>
+<span class="s2">    COUNT(*) as total_records,</span>
+<span class="s2">    COUNT(DISTINCT email) as unique_emails,</span>
+<span class="s2">    COUNT(*) - COUNT(DISTINCT email) as potential_duplicates</span>
+<span class="s2">FROM employees</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;sales_transactions&#39;,</span>
+<span class="s2">    COUNT(*),</span>
+<span class="s2">    COUNT(DISTINCT transaction_id),</span>
+<span class="s2">    COUNT(*) - COUNT(DISTINCT transaction_id)</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">duplicate_check</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3. Data range validation:&quot;</span><span class="p">)</span>
+<span class="n">range_check</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;salary_ranges&#39; as check_type,</span>
+<span class="s2">    COUNT(*) as total_employees,</span>
+<span class="s2">    SUM(CASE WHEN salary &lt; 30000 THEN 1 ELSE 0 END) as below_minimum,</span>
+<span class="s2">    SUM(CASE WHEN salary &gt; 200000 THEN 1 ELSE 0 END) as above_maximum</span>
+<span class="s2">FROM employees</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;sale_amounts&#39;,</span>
+<span class="s2">    COUNT(*),</span>
+<span class="s2">    SUM(CASE WHEN amount &lt;= 0 THEN 1 ELSE 0 END),</span>
+<span class="s2">    SUM(CASE WHEN amount &gt; 50000 THEN 1 ELSE 0 END)</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">range_check</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== DATA QUALITY ASSESSMENT ===
+1. Missing or NULL values:
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">OperationalError</span><span class="g g-Whitespace">                          </span>Traceback (most recent call last)
+<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/sql.py:2674,</span> in <span class="ni">SQLiteDatabase.execute</span><span class="nt">(self, sql, params)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2673</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">2674</span>     <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2675</span>     <span class="k">return</span> <span class="n">cur</span>
+
+<span class="ne">OperationalError</span>: no such column: emp_id
+
+<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
+
+<span class="ne">DatabaseError</span><span class="g g-Whitespace">                             </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== DATA QUALITY ASSESSMENT ===&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. Missing or NULL values:&quot;</span><span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">null_check</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span><span class="s2"> SELECT </span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span><span class="s2">     &#39;employees&#39; as table_name,</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span><span class="s2">     SUM(CASE WHEN first_name IS NULL THEN 1 ELSE 0 END) as null_first_name,</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span><span class="s2">     SUM(CASE WHEN last_name IS NULL THEN 1 ELSE 0 END) as null_last_name,</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span><span class="s2">     SUM(CASE WHEN email IS NULL THEN 1 ELSE 0 END) as null_email,</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span><span class="s2">     SUM(CASE WHEN salary IS NULL THEN 1 ELSE 0 END) as null_salary</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span><span class="s2"> FROM employees</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span><span class="s2"> UNION ALL</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span><span class="s2"> SELECT </span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span><span class="s2">     &#39;sales_transactions&#39;,</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span><span class="s2">     SUM(CASE WHEN emp_id IS NULL THEN 1 ELSE 0 END),</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span><span class="s2">     SUM(CASE WHEN sale_date IS NULL THEN 1 ELSE 0 END),</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span><span class="s2">     SUM(CASE WHEN amount IS NULL THEN 1 ELSE 0 END),</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span><span class="s2">     SUM(CASE WHEN customer_id IS NULL THEN 1 ELSE 0 END)</span>
+<span class="g g-Whitespace">     </span><span class="mi">20</span><span class="s2"> &quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">21</span> <span class="n">display</span><span class="p">(</span><span class="n">null_check</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2. Duplicate records check:&quot;</span><span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/sql.py:526,</span> in <span class="ni">read_sql_query</span><span class="nt">(sql, con, index_col, coerce_float, params, parse_dates, chunksize, dtype, dtype_backend)</span>
+<span class="g g-Whitespace">    </span><span class="mi">523</span> <span class="k">assert</span> <span class="n">dtype_backend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">lib</span><span class="o">.</span><span class="n">no_default</span>
+<span class="g g-Whitespace">    </span><span class="mi">525</span> <span class="k">with</span> <span class="n">pandasSQL_builder</span><span class="p">(</span><span class="n">con</span><span class="p">)</span> <span class="k">as</span> <span class="n">pandas_sql</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">526</span>     <span class="k">return</span> <span class="n">pandas_sql</span><span class="o">.</span><span class="n">read_query</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">527</span>         <span class="n">sql</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">528</span>         <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">529</span>         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">530</span>         <span class="n">coerce_float</span><span class="o">=</span><span class="n">coerce_float</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">531</span>         <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">532</span>         <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">533</span>         <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">534</span>         <span class="n">dtype_backend</span><span class="o">=</span><span class="n">dtype_backend</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">535</span>     <span class="p">)</span>
+
+<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/sql.py:2738,</span> in <span class="ni">SQLiteDatabase.read_query</span><span class="nt">(self, sql, index_col, coerce_float, parse_dates, params, chunksize, dtype, dtype_backend)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2727</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_query</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">2728</span>     <span class="bp">self</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">2729</span>     <span class="n">sql</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="mi">2736</span>     <span class="n">dtype_backend</span><span class="p">:</span> <span class="n">DtypeBackend</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;numpy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">2737</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span> <span class="o">|</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="ne">-&gt; </span><span class="mi">2738</span>     <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2739</span>     <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col_desc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">col_desc</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
+<span class="g g-Whitespace">   </span><span class="mi">2741</span>     <span class="k">if</span> <span class="n">chunksize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+<span class="nn">File ~/.local/lib/python3.12/site-packages/pandas/io/sql.py:2686,</span> in <span class="ni">SQLiteDatabase.execute</span><span class="nt">(self, sql, params)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2683</span>     <span class="k">raise</span> <span class="n">ex</span> <span class="kn">from</span><span class="w"> </span><span class="nn">inner_exc</span>
+<span class="g g-Whitespace">   </span><span class="mi">2685</span> <span class="n">ex</span> <span class="o">=</span> <span class="n">DatabaseError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Execution failed on sql &#39;</span><span class="si">{</span><span class="n">sql</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">2686</span> <span class="k">raise</span> <span class="n">ex</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+<span class="ne">DatabaseError</span>: Execution failed on sql &#39;
+<span class="n">SELECT</span> 
+    <span class="s1">&#39;employees&#39;</span> <span class="k">as</span> <span class="n">table_name</span><span class="p">,</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">first_name</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">)</span> <span class="k">as</span> <span class="n">null_first_name</span><span class="p">,</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">last_name</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">)</span> <span class="k">as</span> <span class="n">null_last_name</span><span class="p">,</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">email</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">)</span> <span class="k">as</span> <span class="n">null_email</span><span class="p">,</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">salary</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">)</span> <span class="k">as</span> <span class="n">null_salary</span>
+<span class="n">FROM</span> <span class="n">employees</span>
+<span class="n">UNION</span> <span class="n">ALL</span>
+<span class="n">SELECT</span> 
+    <span class="s1">&#39;sales_transactions&#39;</span><span class="p">,</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">emp_id</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">),</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">sale_date</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">),</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">amount</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">),</span>
+    <span class="n">SUM</span><span class="p">(</span><span class="n">CASE</span> <span class="n">WHEN</span> <span class="n">customer_id</span> <span class="n">IS</span> <span class="n">NULL</span> <span class="n">THEN</span> <span class="mi">1</span> <span class="n">ELSE</span> <span class="mi">0</span> <span class="n">END</span><span class="p">)</span>
+<span class="s1">&#39;: no such column: emp_id</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="executive-summary-report">
+<h2><span class="section-number">2.9. </span>7. Executive Summary Report<a class="headerlink" href="#executive-summary-report" title="Link to this heading">#</a></h2>
+<p>Creating a comprehensive business report with key insights.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Executive summary report</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== EXECUTIVE SUMMARY REPORT ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generated on:&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Key business metrics</span>
+<span class="n">summary_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;Total Employees&#39; as metric,</span>
+<span class="s2">    COUNT(*) as value,</span>
+<span class="s2">    &#39;&#39; as unit</span>
+<span class="s2">FROM employees</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;Total Revenue (2023)&#39;,</span>
+<span class="s2">    ROUND(SUM(amount), 2),</span>
+<span class="s2">    &#39;USD&#39;</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;Average Transaction Size&#39;,</span>
+<span class="s2">    ROUND(AVG(amount), 2),</span>
+<span class="s2">    &#39;USD&#39;</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;Total Customers&#39;,</span>
+<span class="s2">    COUNT(DISTINCT customer_id),</span>
+<span class="s2">    &#39;customers&#39;</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">UNION ALL</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;Average Employee Salary&#39;,</span>
+<span class="s2">    ROUND(AVG(salary), 2),</span>
+<span class="s2">    &#39;USD&#39;</span>
+<span class="s2">FROM employees</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">KEY BUSINESS METRICS:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">summary_metrics</span><span class="p">)</span>
+
+<span class="c1"># Top performers</span>
+<span class="n">top_performers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    &#39;Top Sales Employee&#39; as category,</span>
+<span class="s2">    e.first_name || &#39; &#39; || e.last_name as name,</span>
+<span class="s2">    ROUND(SUM(s.amount), 2) as value</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">JOIN sales_transactions s ON e.emp_id = s.emp_id</span>
+<span class="s2">GROUP BY e.emp_id, e.first_name, e.last_name</span>
+<span class="s2">ORDER BY SUM(s.amount) DESC</span>
+<span class="s2">LIMIT 1</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">TOP PERFORMERS:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">top_performers</span><span class="p">)</span>
+
+<span class="c1"># Recommendations based on analysis</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">KEY INSIGHTS &amp; RECOMMENDATIONS:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. Engineering department shows highest ROI&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. Q4 sales performance exceeded other quarters&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3. Customer retention could be improved - focus on repeat buyers&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4. Performance scores correlate positively with sales results&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5. Consider salary adjustments for top performers&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="practice-exercises-data-analysis">
+<h2><span class="section-number">2.10. </span>8. Practice Exercises - Data Analysis<a class="headerlink" href="#practice-exercises-data-analysis" title="Link to this heading">#</a></h2>
+<p>Apply your data analysis skills with these real-world scenarios!</p>
+<section id="data-analysis-challenges">
+<h3><span class="section-number">2.10.1. </span>Data Analysis Challenges:<a class="headerlink" href="#data-analysis-challenges" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Seasonal Analysis</strong>: Identify the best and worst performing months for each product category</p></li>
+<li><p><strong>Employee Efficiency</strong>: Calculate sales per dollar of salary for each employee</p></li>
+<li><p><strong>Customer Segmentation</strong>: Create customer segments based on purchase behavior</p></li>
+<li><p><strong>Forecasting Data</strong>: Prepare data for time series forecasting</p></li>
+<li><p><strong>Performance Dashboard</strong>: Create a comprehensive performance scorecard</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Practice solutions</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== DATA ANALYSIS PRACTICE SOLUTIONS ===&quot;</span><span class="p">)</span>
+
+<span class="c1"># Solution 1: Seasonal analysis by category</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. SEASONAL ANALYSIS BY PRODUCT CATEGORY:&quot;</span><span class="p">)</span>
+<span class="n">seasonal_analysis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    product_category,</span>
+<span class="s2">    strftime(&#39;%m&#39;, sale_date) as month,</span>
+<span class="s2">    COUNT(*) as sales_count,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as revenue,</span>
+<span class="s2">    ROUND(AVG(amount), 2) as avg_sale</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">GROUP BY product_category, strftime(&#39;%m&#39;, sale_date)</span>
+<span class="s2">ORDER BY product_category, month</span>
+<span class="s2">LIMIT 15  -- Show first 15 results</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">seasonal_analysis</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2. EMPLOYEE EFFICIENCY (Sales per Salary Dollar):&quot;</span><span class="p">)</span>
+<span class="n">efficiency_analysis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e.first_name || &#39; &#39; || e.last_name as employee,</span>
+<span class="s2">    e.salary,</span>
+<span class="s2">    COUNT(s.transaction_id) as sales_count,</span>
+<span class="s2">    COALESCE(ROUND(SUM(s.amount), 2), 0) as total_sales,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN e.salary &gt; 0 THEN ROUND(COALESCE(SUM(s.amount), 0) / e.salary, 3)</span>
+<span class="s2">        ELSE 0 </span>
+<span class="s2">    END as sales_per_salary_dollar</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">LEFT JOIN sales_transactions s ON e.emp_id = s.emp_id</span>
+<span class="s2">GROUP BY e.emp_id, e.first_name, e.last_name, e.salary</span>
+<span class="s2">ORDER BY sales_per_salary_dollar DESC</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">efficiency_analysis</span><span class="p">)</span>
+
+<span class="c1"># Add your solutions for exercises 3-5 here!</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3. Try customer segmentation analysis...&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4. Try preparing forecasting data...&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5. Try creating a performance dashboard...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data export for visualization</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== PREPARING DATA FOR VISUALIZATION ===&quot;</span><span class="p">)</span>
+
+<span class="c1"># Export key datasets for external visualization tools</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ready to export data for tools like Tableau, Power BI, or Python visualization libraries!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example: Monthly sales trend data</span>
+<span class="n">monthly_export</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    strftime(&#39;%Y-%m&#39;, sale_date) as month,</span>
+<span class="s2">    product_category,</span>
+<span class="s2">    COUNT(*) as transaction_count,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as revenue</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">GROUP BY strftime(&#39;%Y-%m&#39;, sale_date), product_category</span>
+<span class="s2">ORDER BY month, product_category</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Monthly sales data prepared: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">monthly_export</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Columns:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">monthly_export</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+
+<span class="c1"># You could save this data:</span>
+<span class="c1"># monthly_export.to_csv(&#39;monthly_sales_data.csv&#39;, index=False)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data analysis workflow completed!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Next steps: Use this data with visualization tools or advanced analytics platforms!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data export for visualization</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== PREPARING DATA FOR VISUALIZATION ===&quot;</span><span class="p">)</span>
+
+<span class="c1"># Export key datasets for external visualization tools</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ready to export data for tools like Tableau, Power BI, or Python visualization libraries!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example: Monthly sales trend data</span>
+<span class="n">monthly_export</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    strftime(&#39;%Y-%m&#39;, sale_date) as month,</span>
+<span class="s2">    product_category,</span>
+<span class="s2">    COUNT(*) as transaction_count,</span>
+<span class="s2">    ROUND(SUM(amount), 2) as revenue</span>
+<span class="s2">FROM sales_transactions</span>
+<span class="s2">GROUP BY strftime(&#39;%Y-%m&#39;, sale_date), product_category</span>
+<span class="s2">ORDER BY month, product_category</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Monthly sales data prepared: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">monthly_export</span><span class="p">)</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Columns:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">monthly_export</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+
+<span class="c1"># You could save this data:</span>
+<span class="c1"># monthly_export.to_csv(&#39;monthly_sales_data.csv&#39;, index=False)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data analysis workflow completed!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Next steps: Use this data with visualization tools or advanced analytics platforms!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="advanced-sql.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Advanced SQL Concepts</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ranjan Kumar Choubey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

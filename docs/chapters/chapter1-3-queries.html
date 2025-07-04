@@ -1,0 +1,1986 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1.13. 1.3 Basic SELECT Queries &#8212; SQL Learning Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/chapter1-3-queries';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1.14. 1.4 Filtering with WHERE" href="chapter1-4-filtering.html" />
+    <link rel="prev" title="1.12. 1.2 Creating Tables and Data Types" href="chapter1-2-tables.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../README.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">SQL Learning Notes</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="chapter1.html">1. SQL Fundamentals</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="chapter1-1-setup.html">1.11. Database Setup and Connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter1-2-tables.html">1.12. Creating Tables and Data Types</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1.13. Basic SELECT Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter1-4-filtering.html">1.14. Filtering with WHERE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter1-5-sorting.html">1.15. Sorting and Ordering</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="chapter2.html">2. Advanced SQL Operations</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapter2-1-grouping.html">2.11. GROUP BY and Aggregations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter2-2-joins.html">2.12. JOIN Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter2-3-subqueries.html">2.13. Subqueries and Complex Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter2-4-analytics.html">2.14. Advanced Analytics</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="chapter3.html">3. Window Functions and Analytics</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapter3-1-window-intro.html">3.3. Introduction to Window Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter3-2-ranking.html">3.4. Ranking Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter3-3-aggregates.html">3.5. Window Aggregates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter3-4-lag-lead.html">3.6. LAG and LEAD Functions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="chapter4.html">4. Database Design and Optimization</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapter4-1-normalization.html">4.2. Database Normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter4-2-indexes.html">4.3. Indexes and Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter4-3-constraints.html">4.4. Constraints and Data Integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter4-4-best-practices.html">4.5. Best Practices</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="chapter5.html">5. Real-World SQL Projects</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="chapter5-1-data-analysis.html">5.2. Business Data Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter5-2-reporting.html">5.3. Creating Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter5-3-etl.html">5.4. ETL Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chapter5-4-integration.html">5.5. Python Integration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../sql-notes.html">6. Complete Reference Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/ranjanchoubey/sql-notes" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>1.3 Basic SELECT Queries</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">1.13.1. Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">1.13.2. Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#database-connection">1.13.3. Database Connection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-select-statement-structure">1.13.4. The SELECT Statement Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">1.13.4.1. Key Components:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#column-aliases">1.13.5. Column Aliases</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alias-syntax">1.13.5.1. Alias Syntax:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limiting-results-with-limit">1.13.6. Limiting Results with LIMIT</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limit-syntax">1.13.6.1. LIMIT Syntax:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distinct-removing-duplicates">1.13.7. DISTINCT - Removing Duplicates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distinct-usage">1.13.7.1. DISTINCT Usage:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-multiple-concepts">1.13.8. Combining Multiple Concepts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-exercises">1.13.9. Practice Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-performance-tips">1.13.10. Query Performance Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-select-queries">1.13.10.1. Best Practices for SELECT queries:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-query-execution">1.13.10.2. Understanding Query Execution:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#section-summary">1.13.11. Section Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-sql-commands">1.13.11.1. Key SQL Commands:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query-structure-pattern">1.13.11.2. Query Structure Pattern:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">1.13.11.3. Next Steps</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="basic-select-queries">
+<h1><span class="section-number">1.13. </span>1.3 Basic SELECT Queries<a class="headerlink" href="#basic-select-queries" title="Link to this heading">#</a></h1>
+<p>This section introduces the fundamental SELECT statement - the foundation of data retrieval in SQL.</p>
+<section id="learning-objectives">
+<h2><span class="section-number">1.13.1. </span>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this section, you will be able to:</p>
+<ul class="simple">
+<li><p>Write basic SELECT statements to retrieve data</p></li>
+<li><p>Select specific columns vs. all columns</p></li>
+<li><p>Use aliases to rename columns</p></li>
+<li><p>Apply LIMIT to control result size</p></li>
+<li><p>Understand query execution order</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2><span class="section-number">1.13.2. </span>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Completed sections 1.1 and 1.2</p></li>
+<li><p>Understanding of table structure</p></li>
+<li><p>Sample data from previous sections</p></li>
+</ul>
+</section>
+<section id="database-connection">
+<h2><span class="section-number">1.13.3. </span>Database Connection<a class="headerlink" href="#database-connection" title="Link to this heading">#</a></h2>
+<p>Let’s connect to our database and verify our sample data is ready.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+
+<span class="c1"># Connect to our database</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;my_database.db&#39;</span><span class="p">)</span>
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="c1"># Verify our tables exist</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT name FROM sqlite_master WHERE type=&#39;table&#39;&quot;</span><span class="p">)</span>
+<span class="n">tables</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Database connection established!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📚 Available tables: </span><span class="si">{</span><span class="p">[</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">table</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">tables</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Database connection established!
+📚 Available tables: [&#39;sqlite_sequence&#39;, &#39;departments&#39;, &#39;employees&#39;, &#39;projects&#39;, &#39;customers&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-select-statement-structure">
+<h2><span class="section-number">1.13.4. </span>The SELECT Statement Structure<a class="headerlink" href="#the-select-statement-structure" title="Link to this heading">#</a></h2>
+<p>The basic syntax of a SELECT statement:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">column1</span><span class="p">,</span><span class="w"> </span><span class="n">column2</span><span class="p">,</span><span class="w"> </span><span class="p">...</span>
+<span class="k">FROM</span><span class="w"> </span><span class="k">table_name</span><span class="p">;</span>
+</pre></div>
+</div>
+<section id="key-components">
+<h3><span class="section-number">1.13.4.1. </span>Key Components:<a class="headerlink" href="#key-components" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>SELECT</strong>: Specifies which columns to retrieve</p></li>
+<li><p><strong>FROM</strong>: Specifies which table to query</p></li>
+<li><p><strong>;</strong>: Ends the SQL statement</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: Select all columns with *</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📊 Example 1: Select all columns from departments&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM departments&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Select specific columns</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📊 Example 2: Select specific columns from employees&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT first_name, last_name, email FROM employees&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 3: Select with calculated columns</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📊 Example 3: Select with calculations&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    first_name, </span>
+<span class="s2">    last_name, </span>
+<span class="s2">    salary,</span>
+<span class="s2">    salary * 12 as annual_salary</span>
+<span class="s2">FROM employees</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>📊 Example 1: Select all columns from departments
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dept_id</th>
+      <th>dept_name</th>
+      <th>location</th>
+      <th>budget</th>
+      <th>created_date</th>
+      <th>is_active</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Human Resources</td>
+      <td>New York</td>
+      <td>500000</td>
+      <td>2020-01-01</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+      <td>2000000</td>
+      <td>2019-06-15</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Marketing</td>
+      <td>Chicago</td>
+      <td>750000</td>
+      <td>2020-03-01</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Sales</td>
+      <td>Los Angeles</td>
+      <td>1200000</td>
+      <td>2019-12-01</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Finance</td>
+      <td>Boston</td>
+      <td>600000</td>
+      <td>2020-02-15</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+📊 Example 2: Select specific columns from employees
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>John</td>
+      <td>Doe</td>
+      <td>john.doe@company.com</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>jane.smith@company.com</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>mike.johnson@company.com</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>sarah.williams@company.com</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>David</td>
+      <td>Brown</td>
+      <td>david.brown@company.com</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+📊 Example 3: Select with calculations
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>salary</th>
+      <th>annual_salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>John</td>
+      <td>Doe</td>
+      <td>75000</td>
+      <td>900000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>82000</td>
+      <td>984000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>65000</td>
+      <td>780000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>90000</td>
+      <td>1080000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>David</td>
+      <td>Brown</td>
+      <td>95000</td>
+      <td>1140000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="column-aliases">
+<h2><span class="section-number">1.13.5. </span>Column Aliases<a class="headerlink" href="#column-aliases" title="Link to this heading">#</a></h2>
+<p>Aliases allow you to rename columns in your query results for better readability.</p>
+<section id="alias-syntax">
+<h3><span class="section-number">1.13.5.1. </span>Alias Syntax:<a class="headerlink" href="#alias-syntax" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">column_name</span> <span class="pre">AS</span> <span class="pre">alias_name</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">column_name</span> <span class="pre">alias_name</span></code> (AS is optional)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example: Using aliases for better column names</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🏷️ Using Column Aliases:&quot;</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    dept_id AS &quot;Department ID&quot;,</span>
+<span class="s2">    dept_name AS &quot;Department Name&quot;,</span>
+<span class="s2">    location AS &quot;Office Location&quot;,</span>
+<span class="s2">    budget AS &quot;Annual Budget&quot;,</span>
+<span class="s2">    is_active AS &quot;Currently Active&quot;</span>
+<span class="s2">FROM departments</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example: Aliases with calculations</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🧮 Aliases with Calculations:&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    project_name AS &quot;Project&quot;,</span>
+<span class="s2">    budget AS &quot;Budget ($)&quot;,</span>
+<span class="s2">    budget / 1000 AS &quot;Budget (K$)&quot;,</span>
+<span class="s2">    ROUND(budget / 1000, 1) AS &quot;Budget (Rounded K$)&quot;</span>
+<span class="s2">FROM projects</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🏷️ Using Column Aliases:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Department ID</th>
+      <th>Department Name</th>
+      <th>Office Location</th>
+      <th>Annual Budget</th>
+      <th>Currently Active</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Human Resources</td>
+      <td>New York</td>
+      <td>500000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+      <td>2000000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Marketing</td>
+      <td>Chicago</td>
+      <td>750000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Sales</td>
+      <td>Los Angeles</td>
+      <td>1200000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Finance</td>
+      <td>Boston</td>
+      <td>600000</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+🧮 Aliases with Calculations:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Project</th>
+      <th>Budget ($)</th>
+      <th>Budget (K$)</th>
+      <th>Budget (Rounded K$)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Website Redesign</td>
+      <td>150000</td>
+      <td>150</td>
+      <td>150.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Mobile App Development</td>
+      <td>300000</td>
+      <td>300</td>
+      <td>300.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Marketing Campaign Q2</td>
+      <td>75000</td>
+      <td>75</td>
+      <td>75.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sales Training Program</td>
+      <td>50000</td>
+      <td>50</td>
+      <td>50.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Financial System Upgrade</td>
+      <td>200000</td>
+      <td>200</td>
+      <td>200.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="limiting-results-with-limit">
+<h2><span class="section-number">1.13.6. </span>Limiting Results with LIMIT<a class="headerlink" href="#limiting-results-with-limit" title="Link to this heading">#</a></h2>
+<p>The LIMIT clause controls how many rows are returned in your result set.</p>
+<section id="limit-syntax">
+<h3><span class="section-number">1.13.6.1. </span>LIMIT Syntax:<a class="headerlink" href="#limit-syntax" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LIMIT</span> <span class="pre">n</span></code> - Returns first n rows</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LIMIT</span> <span class="pre">n</span> <span class="pre">OFFSET</span> <span class="pre">m</span></code> - Returns n rows starting from row m+1</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: Using LIMIT to get first 3 employees</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔢 Example 1: First 3 employees&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM employees LIMIT 3&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Using LIMIT with OFFSET</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔢 Example 2: Employees 2-4 (OFFSET demonstration)&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT first_name, last_name, salary FROM employees LIMIT 3 OFFSET 1&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 3: Top 2 highest budget projects</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔢 Example 3: Projects ordered by budget (we&#39;ll learn ORDER BY in detail later)&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT project_name, budget </span>
+<span class="s2">FROM projects </span>
+<span class="s2">ORDER BY budget DESC </span>
+<span class="s2">LIMIT 2</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🔢 Example 1: First 3 employees
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>emp_id</th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>email</th>
+      <th>hire_date</th>
+      <th>salary</th>
+      <th>dept_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>John</td>
+      <td>Doe</td>
+      <td>john.doe@company.com</td>
+      <td>2020-01-15</td>
+      <td>75000</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>jane.smith@company.com</td>
+      <td>2019-03-22</td>
+      <td>82000</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>mike.johnson@company.com</td>
+      <td>2021-06-10</td>
+      <td>65000</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+🔢 Example 2: Employees 2-4 (OFFSET demonstration)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>82000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>65000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>90000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+🔢 Example 3: Projects ordered by budget (we&#39;ll learn ORDER BY in detail later)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>project_name</th>
+      <th>budget</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mobile App Development</td>
+      <td>300000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Financial System Upgrade</td>
+      <td>200000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="distinct-removing-duplicates">
+<h2><span class="section-number">1.13.7. </span>DISTINCT - Removing Duplicates<a class="headerlink" href="#distinct-removing-duplicates" title="Link to this heading">#</a></h2>
+<p>The DISTINCT keyword removes duplicate rows from your result set.</p>
+<section id="distinct-usage">
+<h3><span class="section-number">1.13.7.1. </span>DISTINCT Usage:<a class="headerlink" href="#distinct-usage" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">DISTINCT</span> <span class="pre">column</span></code> - Unique values from one column</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">DISTINCT</span> <span class="pre">col1,</span> <span class="pre">col2</span></code> - Unique combinations of multiple columns</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: Distinct departments (from employees table)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Example 1: Distinct department IDs from employees&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT DISTINCT dept_id FROM employees&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Distinct locations</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Example 2: Distinct office locations&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT DISTINCT location FROM departments&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 3: Distinct combinations</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Example 3: Distinct status and priority combinations from projects&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT DISTINCT status, priority FROM projects ORDER BY status, priority&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🎯 Example 1: Distinct department IDs from employees
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dept_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+🎯 Example 2: Distinct office locations
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>location</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>New York</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>San Francisco</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Chicago</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Los Angeles</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Boston</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+🎯 Example 3: Distinct status and priority combinations from projects
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>status</th>
+      <th>priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Active</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Completed</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>In Progress</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>In Progress</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Planning</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="combining-multiple-concepts">
+<h2><span class="section-number">1.13.8. </span>Combining Multiple Concepts<a class="headerlink" href="#combining-multiple-concepts" title="Link to this heading">#</a></h2>
+<p>Let’s combine what we’ve learned into more complex queries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Complex example combining all concepts</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🚀 Complex Query Example:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get unique employee information with calculated annual salary, limited results&quot;</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT DISTINCT</span>
+<span class="s2">    first_name AS &quot;First Name&quot;,</span>
+<span class="s2">    last_name AS &quot;Last Name&quot;, </span>
+<span class="s2">    email AS &quot;Email Address&quot;,</span>
+<span class="s2">    salary AS &quot;Monthly Salary&quot;,</span>
+<span class="s2">    salary * 12 AS &quot;Annual Salary&quot;,</span>
+<span class="s2">    dept_id AS &quot;Department&quot;</span>
+<span class="s2">FROM employees</span>
+<span class="s2">WHERE salary &gt; 70000</span>
+<span class="s2">ORDER BY salary DESC</span>
+<span class="s2">LIMIT 3</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Another example with projects</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Project Summary Example:&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    project_name AS &quot;Project Name&quot;,</span>
+<span class="s2">    status AS &quot;Current Status&quot;,</span>
+<span class="s2">    budget / 1000 AS &quot;Budget (K$)&quot;,</span>
+<span class="s2">    priority AS &quot;Priority Level&quot;,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN priority &gt;= 4 THEN &#39;High&#39;</span>
+<span class="s2">        WHEN priority = 3 THEN &#39;Medium&#39; </span>
+<span class="s2">        ELSE &#39;Low&#39;</span>
+<span class="s2">    END AS &quot;Priority Label&quot;</span>
+<span class="s2">FROM projects</span>
+<span class="s2">ORDER BY priority DESC, budget DESC</span>
+<span class="s2">LIMIT 4</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🚀 Complex Query Example:
+Get unique employee information with calculated annual salary, limited results
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email Address</th>
+      <th>Monthly Salary</th>
+      <th>Annual Salary</th>
+      <th>Department</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>David</td>
+      <td>Brown</td>
+      <td>david.brown@company.com</td>
+      <td>95000</td>
+      <td>1140000</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>sarah.williams@company.com</td>
+      <td>90000</td>
+      <td>1080000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>jane.smith@company.com</td>
+      <td>82000</td>
+      <td>984000</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+🎯 Project Summary Example:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Project Name</th>
+      <th>Current Status</th>
+      <th>Budget (K$)</th>
+      <th>Priority Level</th>
+      <th>Priority Label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mobile App Development</td>
+      <td>Planning</td>
+      <td>300</td>
+      <td>5</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Financial System Upgrade</td>
+      <td>In Progress</td>
+      <td>200</td>
+      <td>5</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Website Redesign</td>
+      <td>In Progress</td>
+      <td>150</td>
+      <td>4</td>
+      <td>High</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Marketing Campaign Q2</td>
+      <td>Active</td>
+      <td>75</td>
+      <td>3</td>
+      <td>Medium</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="practice-exercises">
+<h2><span class="section-number">1.13.9. </span>Practice Exercises<a class="headerlink" href="#practice-exercises" title="Link to this heading">#</a></h2>
+<p>Practice writing SELECT statements with the concepts you’ve learned:</p>
+<ol class="arabic simple">
+<li><p><strong>Basic Selection</strong>: Get all information from the customers table</p></li>
+<li><p><strong>Specific Columns</strong>: Select only company names and emails from customers</p></li>
+<li><p><strong>With Aliases</strong>: Create meaningful column names for a departments query</p></li>
+<li><p><strong>Limited Results</strong>: Get the first 2 projects with their names and budgets</p></li>
+<li><p><strong>Distinct Values</strong>: Find all unique countries from the customers table</p></li>
+</ol>
+<p>Complete the exercises below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Exercise 1: Basic selection from customers</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exercise 1: All customer information&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM customers&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Exercise 2: Specific columns</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exercise 2: Company names and emails&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT company_name, email </span>
+<span class="s2">FROM customers</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Exercise 3: Using aliases</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exercise 3: Departments with meaningful column names&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    dept_name AS &quot;Department&quot;,</span>
+<span class="s2">    location AS &quot;Office Location&quot;, </span>
+<span class="s2">    budget AS &quot;Annual Budget ($)&quot;,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN is_active = 1 THEN &#39;Active&#39;</span>
+<span class="s2">        ELSE &#39;Inactive&#39;</span>
+<span class="s2">    END AS &quot;Status&quot;</span>
+<span class="s2">FROM departments</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Exercise 4: Limited results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exercise 4: First 2 projects with names and budgets&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    project_name AS &quot;Project Name&quot;,</span>
+<span class="s2">    budget AS &quot;Budget ($)&quot;</span>
+<span class="s2">FROM projects</span>
+<span class="s2">LIMIT 2</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Exercise 5: Distinct values</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exercise 5: Unique countries from customers&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT DISTINCT country FROM customers&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Exercise 1: All customer information
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>company_name</th>
+      <th>contact_name</th>
+      <th>email</th>
+      <th>phone</th>
+      <th>address</th>
+      <th>city</th>
+      <th>country</th>
+      <th>credit_limit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Tech Solutions Inc</td>
+      <td>Alice Johnson</td>
+      <td>alice@techsolutions.com</td>
+      <td>555-0101</td>
+      <td>123 Tech St</td>
+      <td>San Francisco</td>
+      <td>USA</td>
+      <td>50000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Global Marketing Ltd</td>
+      <td>Bob Smith</td>
+      <td>bob@globalmarketing.com</td>
+      <td>555-0102</td>
+      <td>456 Market Ave</td>
+      <td>New York</td>
+      <td>USA</td>
+      <td>75000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Innovation Corp</td>
+      <td>Carol Davis</td>
+      <td>carol@innovation.com</td>
+      <td>555-0103</td>
+      <td>789 Innovation Blvd</td>
+      <td>Austin</td>
+      <td>USA</td>
+      <td>100000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+Exercise 2: Company names and emails
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>company_name</th>
+      <th>email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Tech Solutions Inc</td>
+      <td>alice@techsolutions.com</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Global Marketing Ltd</td>
+      <td>bob@globalmarketing.com</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Innovation Corp</td>
+      <td>carol@innovation.com</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+Exercise 3: Departments with meaningful column names
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Department</th>
+      <th>Office Location</th>
+      <th>Annual Budget ($)</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Human Resources</td>
+      <td>New York</td>
+      <td>500000</td>
+      <td>Active</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+      <td>2000000</td>
+      <td>Active</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Marketing</td>
+      <td>Chicago</td>
+      <td>750000</td>
+      <td>Active</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sales</td>
+      <td>Los Angeles</td>
+      <td>1200000</td>
+      <td>Active</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Finance</td>
+      <td>Boston</td>
+      <td>600000</td>
+      <td>Active</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+Exercise 4: First 2 projects with names and budgets
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Project Name</th>
+      <th>Budget ($)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Website Redesign</td>
+      <td>150000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Mobile App Development</td>
+      <td>300000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==============================
+
+Exercise 5: Unique countries from customers
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>USA</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="query-performance-tips">
+<h2><span class="section-number">1.13.10. </span>Query Performance Tips<a class="headerlink" href="#query-performance-tips" title="Link to this heading">#</a></h2>
+<section id="best-practices-for-select-queries">
+<h3><span class="section-number">1.13.10.1. </span>Best Practices for SELECT queries:<a class="headerlink" href="#best-practices-for-select-queries" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Specify columns</strong>: Use specific column names instead of <code class="docutils literal notranslate"><span class="pre">*</span></code> when possible</p></li>
+<li><p><strong>Use LIMIT</strong>: Add LIMIT to prevent accidentally large result sets</p></li>
+<li><p><strong>Column order</strong>: Put most selective columns first in multi-column operations</p></li>
+<li><p><strong>Aliases</strong>: Use meaningful aliases for calculated columns</p></li>
+</ol>
+</section>
+<section id="understanding-query-execution">
+<h3><span class="section-number">1.13.10.2. </span>Understanding Query Execution:<a class="headerlink" href="#understanding-query-execution" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>FROM</strong> - Identify the source table</p></li>
+<li><p><strong>SELECT</strong> - Determine which columns to return</p></li>
+<li><p><strong>DISTINCT</strong> - Remove duplicates if specified</p></li>
+<li><p><strong>ORDER BY</strong> - Sort results (covered in next section)</p></li>
+<li><p><strong>LIMIT</strong> - Restrict number of rows returned</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Demonstration of query performance considerations</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Query Performance Examples:&quot;</span><span class="p">)</span>
+
+<span class="c1"># Less efficient - selecting all columns</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;❌ Less efficient (selecting all columns):&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM employees&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Columns returned: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">30</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># More efficient - selecting only needed columns</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ More efficient (selecting specific columns):&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT first_name, last_name FROM employees&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Columns returned: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📊 Memory usage difference is significant with larger datasets!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>📈 Query Performance Examples:
+❌ Less efficient (selecting all columns):
+Columns returned: 7
+
+==============================
+
+✅ More efficient (selecting specific columns):
+Columns returned: 2
+
+📊 Memory usage difference is significant with larger datasets!
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="section-summary">
+<h2><span class="section-number">1.13.11. </span>Section Summary<a class="headerlink" href="#section-summary" title="Link to this heading">#</a></h2>
+<p>In this section, you mastered the fundamentals of data retrieval:</p>
+<p>✅ <strong>SELECT Statement</strong>: The foundation of all data queries<br />
+✅ <strong>Column Selection</strong>: Choosing specific columns vs. selecting all (*)<br />
+✅ <strong>Aliases</strong>: Creating meaningful column names with AS<br />
+✅ <strong>LIMIT</strong>: Controlling result set size for performance<br />
+✅ <strong>DISTINCT</strong>: Removing duplicate rows from results<br />
+✅ <strong>Query Structure</strong>: Understanding the logical flow of SELECT queries</p>
+<section id="key-sql-commands">
+<h3><span class="section-number">1.13.11.1. </span>Key SQL Commands:<a class="headerlink" href="#key-sql-commands" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">column1,</span> <span class="pre">column2</span></code> - Specify columns to retrieve</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span></code> - Retrieve all columns</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AS</span> <span class="pre">alias_name</span></code> - Create column aliases</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LIMIT</span> <span class="pre">n</span></code> - Restrict number of rows</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DISTINCT</span></code> - Remove duplicate rows</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CASE</span> <span class="pre">WHEN</span></code> - Conditional logic in SELECT</p></li>
+</ul>
+</section>
+<section id="query-structure-pattern">
+<h3><span class="section-number">1.13.11.2. </span>Query Structure Pattern:<a class="headerlink" href="#query-structure-pattern" title="Link to this heading">#</a></h3>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="p">[</span><span class="k">DISTINCT</span><span class="p">]</span><span class="w"> </span><span class="n">column_list</span>
+<span class="k">FROM</span><span class="w"> </span><span class="k">table_name</span><span class="w">  </span>
+<span class="p">[</span><span class="k">WHERE</span><span class="w"> </span><span class="n">conditions</span><span class="p">]</span>
+<span class="p">[</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">columns</span><span class="p">]</span>
+<span class="p">[</span><span class="k">LIMIT</span><span class="w"> </span><span class="nb">number</span><span class="p">];</span>
+</pre></div>
+</div>
+</section>
+<section id="next-steps">
+<h3><span class="section-number">1.13.11.3. </span>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h3>
+<p>In section 1.4, you’ll learn how to filter your data using WHERE clauses to find exactly the information you need.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter1-2-tables.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1.12. </span>1.2 Creating Tables and Data Types</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter1-4-filtering.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">1.14. </span>1.4 Filtering with WHERE</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">1.13.1. Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">1.13.2. Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#database-connection">1.13.3. Database Connection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-select-statement-structure">1.13.4. The SELECT Statement Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">1.13.4.1. Key Components:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#column-aliases">1.13.5. Column Aliases</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alias-syntax">1.13.5.1. Alias Syntax:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limiting-results-with-limit">1.13.6. Limiting Results with LIMIT</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#limit-syntax">1.13.6.1. LIMIT Syntax:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distinct-removing-duplicates">1.13.7. DISTINCT - Removing Duplicates</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distinct-usage">1.13.7.1. DISTINCT Usage:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-multiple-concepts">1.13.8. Combining Multiple Concepts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-exercises">1.13.9. Practice Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query-performance-tips">1.13.10. Query Performance Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-for-select-queries">1.13.10.1. Best Practices for SELECT queries:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-query-execution">1.13.10.2. Understanding Query Execution:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#section-summary">1.13.11. Section Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-sql-commands">1.13.11.1. Key SQL Commands:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#query-structure-pattern">1.13.11.2. Query Structure Pattern:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">1.13.11.3. Next Steps</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ranjan Kumar Choubey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
