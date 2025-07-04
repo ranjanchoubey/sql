@@ -1,6 +1,7 @@
 # SQL Learning Notes
 
 A comprehensive Jupyter Book for learning SQL with hands-on examples using SQLite.
+Lets start
 
 ## 🌐 Live Book
 📖 **[View the Live Book](https://yourusername.github.io/sql-notes/)**
