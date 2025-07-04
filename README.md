@@ -8,41 +8,31 @@ Lets start
 
 ## 🚀 Quick Start (GitHub Codespaces)
 
-### Automated Setup
+### One-Command Setup
 For the fastest setup in GitHub Codespaces, run:
 
 ```bash
-# Make scripts executable
-chmod +x setup.sh serve.sh rebuild.sh deploy.sh
-
-# Run the complete setup
-./setup.sh
+# Make script executable and run setup
+chmod +x dev.sh
+./dev.sh setup
 ```
 
 This will automatically:
 - ✅ Install all required Python packages
 - ✅ Build the Jupyter Book
-- ✅ Display your codespace access URL
-- ✅ Set up development scripts
-
-### Access Your Book
-After running setup, your book will be available at:
-- **Live Server**: `https://your-codespace-name-5500.app.github.dev/_build/html/index.html`
-- **Python Server**: Run `./serve.sh` for `https://your-codespace-name-8000.app.github.dev/`
+- ✅ Display your codespace access URLs
 
 ### Development Workflow
 ```bash
-# After making changes to the notebook
-./rebuild.sh
+# Main development commands
+./dev.sh build    # Rebuild after making changes
+./dev.sh serve    # Start local development server
+./dev.sh clean    # Clean build artifacts
+./dev.sh watch    # Auto-rebuild when files change
+./dev.sh deploy   # Prepare for GitHub Pages deployment
 
-# Deploy to GitHub Pages
-./deploy.sh
-
-# Start local server (alternative to Live Server)
-./serve.sh
-
-# Watch for changes and auto-rebuild
-watchmedo shell-command --patterns="*.ipynb;*.md" --recursive --command='./rebuild.sh' .
+# Get help
+./dev.sh help     # Show all available commands
 ```
 
 ## 📚 Deployment
@@ -50,29 +40,25 @@ watchmedo shell-command --patterns="*.ipynb;*.md" --recursive --command='./rebui
 ### Automatic Deployment (Recommended)
 The repository uses GitHub Actions for automatic deployment:
 
-1. **Enable GitHub Pages:**
-   - Go to repository Settings → Pages
-   - Under "Source", select **"GitHub Actions"** (not "Deploy from a branch")
-   - Save the settings
-
-2. **Deploy by pushing:**
+1. **Make changes to your notebooks**
+2. **Commit and push:**
    ```bash
    git add .
    git commit -m "Update content"
    git push origin master
    ```
+3. **GitHub Actions automatically deploys to: `https://ranjanchoubey.github.io/sql-notes/`**
 
-3. **Access your book:**
-   - Live site: `https://ranjanchoubey.github.io/sql-notes/`
-   - Check deployment status in the "Actions" tab
-
-### Manual Build (Development)
+### Manual Development
 ```bash
-# Build locally for testing
-./deploy.sh
+# Quick rebuild during development
+./dev.sh build
 
-# Or rebuild during development
-./rebuild.sh
+# Start local server for testing
+./dev.sh serve
+
+# Watch for changes (auto-rebuild)
+./dev.sh watch
 ```
 
 ## What You'll Learn
@@ -140,11 +126,15 @@ The notebook uses a sample company database with three main tables:
 
 ## Available Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `./setup.sh` | Complete environment setup (run once) |
-| `./rebuild.sh` | Rebuild book after making changes |
-| `./serve.sh` | Start local development server |
+| Command | Purpose |
+|---------|---------|
+| `./dev.sh setup` | Complete environment setup (run once) |
+| `./dev.sh build` | Rebuild book after making changes |
+| `./dev.sh serve` | Start local development server |
+| `./dev.sh clean` | Clean build artifacts |
+| `./dev.sh deploy` | Prepare for GitHub Pages deployment |
+| `./dev.sh watch` | Watch for changes and auto-rebuild |
+| `./dev.sh help` | Show all available commands |
 
 ## Troubleshooting
 
