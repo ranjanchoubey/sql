@@ -26,11 +26,27 @@ jobs:
       run: |
         jupyter-book build .
 
-    - name: Copy build to docs folder
+    - name: Copy build to docs folder and create proper index.html
       run: |
         rm -rf docs/
-        cp -r _build/html/ docs/
+        mkdir -p docs/
+        cp -r _build/html/* docs/
+        
+        # Ensure index.html is the main entry point (from sql-notes.ipynb)
+        if [ -f "docs/sql-notes.html" ]; then
+          cp docs/sql-notes.html docs/index.html
+        fi
+        
         touch docs/.nojekyll
+        ls -la docs/
+
+    - name: Verify index.html exists
+      run: |
+        if [ ! -f "docs/index.html" ]; then
+          echo "ERROR: index.html not found in docs folder!"
+          exit 1
+        fi
+        echo "✅ index.html found at docs/index.html"
 
     - name: Commit and push docs
       run: |
