@@ -21,8 +21,8 @@ bibtex_bibfiles:
 # Information about where the book exists on the web
 repository:
   url: https://github.com/ranjanchoubey/sql-notes
-  path_to_book: .  # Changed from docs to root
-  branch: main
+  path_to_book: .
+  branch: master  # Changed from main to master
 
 # Add GitHub buttons to your book
 html:

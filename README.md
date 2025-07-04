@@ -54,11 +54,11 @@ watchmedo shell-command --patterns="*.ipynb;*.md" --recursive --command='./rebui
 # Commit and push
 git add .
 git commit -m "Deploy to GitHub Pages"
-git push origin main
+git push origin master  # Changed from main to master
 ```
 
 ### Automatic Deployment
-The repository includes GitHub Actions for automatic deployment on every push to main branch.
+The repository includes GitHub Actions for automatic deployment on every push to master branch.
 
 ## What You'll Learn
 

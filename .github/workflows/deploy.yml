@@ -2,9 +2,9 @@ name: Deploy Jupyter Book to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]  # Changed from main to master
   pull_request:
-    branches: [ main ]
+    branches: [ master ]  # Changed from main to master
 
 jobs:
   deploy:
@@ -26,7 +26,7 @@ jobs:
         jupyter-book build .
 
     - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/master'  # Changed from main to master
       run: |
         # Move _build/html to docs
         rm -rf docs/

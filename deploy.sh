@@ -34,5 +34,5 @@ echo ""
 echo "📋 Next steps:"
 echo "1. git add ."
 echo "2. git commit -m 'Deploy to GitHub Pages'"
-echo "3. git push origin main"
+echo "3. git push origin master"  # Changed from main to master
 echo "4. Enable GitHub Pages in repository settings"
