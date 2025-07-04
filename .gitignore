@@ -1,4 +1,5 @@
 # Jupyter Book build outputs
+_build/
 .jupyter_cache/
 
 # Python
@@ -41,3 +42,6 @@ wheels/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Don't ignore docs folder (needed for GitHub Pages)
+# docs/

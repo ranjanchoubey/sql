@@ -1,31 +1,19 @@
 name: deploy-book
 
-# Only run this when the main branch changes
 on:
   push:
     branches:
     - main
-  pull_request:
-    branches:
-    - main
 
-# This job installs dependencies, builds the book, and pushes it to `gh-pages`
 jobs:
   deploy-book:
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-      contents: read
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
 
-    # Install dependencies
     - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
@@ -35,16 +23,28 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    # Build the book
     - name: Build the book
       run: |
         jupyter-book build .
 
-    # Deploy to GitHub Pages (only on main branch)
-    - name: Setup Pages
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: actions/configure-pages@v3
+    - name: Copy to docs folder
+      run: |
+        rm -rf docs/
+        cp -r _build/html docs/
 
+    - name: Commit and push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add docs/
+        git diff --staged --quiet || git commit -m "Update docs from Jupyter Book build"
+        git push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add docs/
+        git commit -m "Update docs from Jupyter Book build" || exit 0
+        git push
     - name: Upload artifact
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: actions/upload-pages-artifact@v2
