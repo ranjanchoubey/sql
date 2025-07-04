@@ -40,6 +40,7 @@ show_help() {
     echo "  build     - Build the Jupyter Book"
     echo "  serve     - Start local development server"
     echo "  start     - Build and serve (recommended for development)"
+    echo "  stop      - Stop all running servers"
     echo "  fix       - Fix dependency issues and rebuild"
     echo "  clean     - Clean build artifacts"
     echo "  deploy    - Prepare for GitHub Pages deployment"
@@ -49,6 +50,7 @@ show_help() {
     echo "Examples:"
     echo "  ./dev.sh setup    # First time setup"
     echo "  ./dev.sh start    # Build and serve (most common)"
+    echo "  ./dev.sh stop     # Stop all servers"
     echo "  ./dev.sh build    # Just rebuild"
     echo "  ./dev.sh fix      # Fix dependency issues"
     echo ""
@@ -205,6 +207,9 @@ safe_build() {
 
 # Function to serve locally
 serve() {
+    # Kill any existing servers first
+    kill_existing_servers
+    
     if [ ! -d "_build/html" ]; then
         print_warning "No build found. Building first..."
         build
@@ -271,6 +276,9 @@ watch() {
 
 # Function to build and serve in one command
 start() {
+    # Kill any existing servers first
+    kill_existing_servers
+    
     print_status "Building and serving Jupyter Book..."
     
     # Clean previous build to ensure fresh start
@@ -331,6 +339,27 @@ start() {
     fi
 }
 
+# Function to kill existing servers
+kill_existing_servers() {
+    print_status "Checking for existing servers..."
+    
+    # Kill any existing Python HTTP servers on port 8000
+    if pgrep -f "python -m http.server 8000" > /dev/null; then
+        print_warning "Stopping existing servers on port 8000..."
+        pkill -f "python -m http.server 8000" || true
+        sleep 2
+    fi
+    
+    # Kill any Jupyter processes that might be holding ports
+    if pgrep -f "jupyter" > /dev/null; then
+        print_warning "Stopping existing Jupyter processes..."
+        pkill -f "jupyter" || true
+        sleep 2
+    fi
+    
+    print_success "Server cleanup complete!"
+}
+
 # Main script logic
 case "${1:-help}" in
     setup)
@@ -344,6 +373,9 @@ case "${1:-help}" in
         ;;
     serve)
         serve
+        ;;
+    stop)
+        kill_existing_servers
         ;;
     fix)
         fix_dependencies
