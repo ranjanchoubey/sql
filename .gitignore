@@ -2,9 +2,6 @@
 _build/
 .jupyter_cache/
 
-# Don't ignore docs folder (for GitHub Pages)
-docs/
-
 # Python
 __pycache__/
 *.py[cod]
@@ -42,6 +39,9 @@ wheels/
 .DS_Store?
 ._*
 .Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 .Trashes
 ehthumbs.db
 Thumbs.db
