@@ -8,15 +8,15 @@ options:
 chapters:
 - file: chapters/chapter1
   title: "Chapter 1: SQL Fundamentals"
-  sections:
-  - file: chapters/chapter1-1-setup
-    title: "Database Setup and Connection"
-  - file: chapters/chapter1-2-tables
-    title: "Creating Tables and Data Types"
-  - file: chapters/chapter1-3-queries
-    title: "Basic SELECT Queries"
 
 - file: chapters/chapter2
+  title: "Chapter 2: Intermediate SQL Operations"  
+
+- file: chapters/chapter3
+  title: "Chapter 3: Advanced SQL & Window Functions"
+
+- file: chapters/chapter5
+  title: "Chapter 5: Real-World SQL Projects"
   title: "Chapter 2: Intermediate SQL Operations"  
 
 - file: chapters/chapter3
