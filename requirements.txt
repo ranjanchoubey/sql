@@ -3,4 +3,3 @@ matplotlib
 pandas
 ipython
 watchdog
-ghp-import
