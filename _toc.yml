@@ -17,15 +17,15 @@ chapters:
 
 - file: chapters/chapter5
   title: "Chapter 5: Real-World SQL Projects"
-  title: "Chapter 2: Intermediate SQL Operations"  
-
-- file: chapters/chapter3
-  title: "Chapter 3: Advanced SQL & Window Functions"
-
-- file: chapters/chapter5
-  title: "Chapter 5: Real-World SQL Projects"
   sections:
   - file: chapters/chapter5-1-data-analysis
+    title: "Business Data Analysis"
+  - file: chapters/chapter5-2-reporting
+    title: "Creating Reports"
+  - file: chapters/chapter5-3-etl
+    title: "ETL Processes"
+  - file: chapters/chapter5-4-integration
+    title: "Python Integration"
     title: "Business Data Analysis"
   - file: chapters/chapter5-2-reporting
     title: "Creating Reports"
