@@ -2,6 +2,9 @@
 
 A comprehensive Jupyter Book for learning SQL with hands-on examples using SQLite.
 
+## 🌐 Live Book
+📖 **[View the Live Book](https://yourusername.github.io/sql-notes/)**
+
 ## 🚀 Quick Start (GitHub Codespaces)
 
 ### Automated Setup
@@ -9,7 +12,7 @@ For the fastest setup in GitHub Codespaces, run:
 
 ```bash
 # Make scripts executable
-chmod +x setup.sh serve.sh rebuild.sh
+chmod +x setup.sh serve.sh rebuild.sh deploy.sh
 
 # Run the complete setup
 ./setup.sh
@@ -23,7 +26,7 @@ This will automatically:
 
 ### Access Your Book
 After running setup, your book will be available at:
-- **Live Server**: `https://your-codespace-name-5500.app.github.dev/_build/html/README.html`
+- **Live Server**: `https://your-codespace-name-5500.app.github.dev/_build/html/index.html`
 - **Python Server**: Run `./serve.sh` for `https://your-codespace-name-8000.app.github.dev/`
 
 ### Development Workflow
@@ -31,12 +34,31 @@ After running setup, your book will be available at:
 # After making changes to the notebook
 ./rebuild.sh
 
+# Deploy to GitHub Pages
+./deploy.sh
+
 # Start local server (alternative to Live Server)
 ./serve.sh
 
 # Watch for changes and auto-rebuild
 watchmedo shell-command --patterns="*.ipynb;*.md" --recursive --command='./rebuild.sh' .
 ```
+
+## 📚 Deployment
+
+### Manual Deployment
+```bash
+# Build and deploy to GitHub Pages
+./deploy.sh
+
+# Commit and push
+git add .
+git commit -m "Deploy to GitHub Pages"
+git push origin main
+```
+
+### Automatic Deployment
+The repository includes GitHub Actions for automatic deployment on every push to main branch.
 
 ## What You'll Learn
 

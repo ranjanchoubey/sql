@@ -11,10 +11,13 @@ if [ $? -eq 0 ]; then
     echo "✅ Rebuild complete!"
     
     if [ ! -z "$CODESPACE_NAME" ]; then
-        echo "🌐 Your book: https://$CODESPACE_NAME-5500.app.github.dev/_build/html/README.html"
+        echo "🌐 Your book: https://$CODESPACE_NAME-5500.app.github.dev/_build/html/index.html"
     else
-        echo "📍 Local file: $(pwd)/_build/html/README.html"
+        echo "📍 Local file: $(pwd)/_build/html/index.html"
     fi
+    
+    echo ""
+    echo "💡 For GitHub Pages deployment, run: ./deploy.sh"
 else
     echo "❌ Rebuild failed"
     exit 1
