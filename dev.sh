@@ -127,8 +127,18 @@ build() {
     # Clean previous build to ensure fresh start
     rm -rf _build/
     
+    # Ensure assets directory exists in build
+    print_status "Preparing assets..."
+    mkdir -p _build/html/assets
+    
     # Build the book
     if jupyter-book build . --all; then
+        # Copy assets to build directory
+        if [ -d "assets" ]; then
+            print_status "Copying assets to build directory..."
+            cp -r assets/* _build/html/assets/ 2>/dev/null || true
+        fi
+        
         print_success "Build complete!"
         
         if [ ! -z "$CODESPACE_NAME" ]; then
@@ -156,6 +166,9 @@ safe_build() {
     rm -rf _build/
     rm -rf .jupyter_cache/
     
+    # Ensure assets directory exists
+    mkdir -p _build/html/assets
+    
     # Try building with different strategies if first attempt fails
     local build_attempts=0
     local max_attempts=3
@@ -165,6 +178,12 @@ safe_build() {
         print_status "Build attempt $build_attempts of $max_attempts..."
         
         if jupyter-book build . --all; then
+            # Copy assets to build directory
+            if [ -d "assets" ]; then
+                print_status "Copying assets to build directory..."
+                cp -r assets/* _build/html/assets/ 2>/dev/null || true
+            fi
+            
             print_success "Build successful!"
             
             if [ ! -z "$CODESPACE_NAME" ]; then
@@ -183,6 +202,12 @@ safe_build() {
             elif [ $build_attempts -eq 2 ]; then
                 print_status "Trying build without executing notebooks..."
                 if jupyter-book build . --all --builder html; then
+                    # Copy assets even on fallback build
+                    if [ -d "assets" ]; then
+                        print_status "Copying assets to build directory..."
+                        cp -r assets/* _build/html/assets/ 2>/dev/null || true
+                    fi
+                    
                     print_success "Build successful (without execution)!"
                     
                     if [ ! -z "$CODESPACE_NAME" ]; then

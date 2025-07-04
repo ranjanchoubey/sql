@@ -53,6 +53,27 @@ parse:
     - linkify
     - substitution
     - tasklist
+    - html_admonition
+    - html_image
+  
+# File formats and handling
+sphinx:
+  extra_extensions:
+    - sphinx.ext.autodoc
+    - sphinx.ext.viewcode
+  config:
+    html_theme_options:
+      repository_url: https://github.com/ranjanchoubey/sql-notes
+      use_repository_button: true
+      use_issues_button: true
+      use_edit_page_button: true
+    # Allow HTML files to be included
+    html_static_path: ['_static', 'assets']
+    # Configure file handling
+    source_suffix:
+      '.md': 'myst-nb'
+      '.ipynb': 'myst-nb'
+      '.rst': 'restructuredtext'
 
 # Sphinx configuration
 sphinx:
