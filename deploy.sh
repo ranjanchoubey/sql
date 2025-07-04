@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Deploying to GitHub Pages..."
+echo "🚀 Building Jupyter Book for GitHub Pages..."
 
 # Clean previous builds
 echo "🧹 Cleaning previous builds..."
@@ -11,21 +11,21 @@ rm -rf _build/
 echo "📖 Building Jupyter Book..."
 jupyter-book build .
 
-# Move _build/html contents to docs/
-echo "📁 Moving files to docs/ folder..."
-mv _build/html docs
-
-# Create .nojekyll file to prevent GitHub from processing with Jekyll
-echo "🔧 Creating .nojekyll file..."
-touch docs/.nojekyll
-
-# Add CNAME file if you have a custom domain (optional)
-# echo "yourdomain.com" > docs/CNAME
-
-echo "✅ Build complete! Files ready for GitHub Pages in docs/ folder"
+echo "✅ Build complete!"
 
 if [ ! -z "$CODESPACE_NAME" ]; then
-    echo "🌐 Preview: https://$CODESPACE_NAME-5500.app.github.dev/docs/"
+    echo "🌐 Preview: https://$CODESPACE_NAME-5500.app.github.dev/_build/html/"
+else
+    echo "📍 Local preview: file://$(pwd)/_build/html/index.html"
+fi
+
+echo ""
+echo "📋 For GitHub Pages deployment:"
+echo "1. Push your changes: git add . && git commit -m 'Update content' && git push origin master"
+echo "2. GitHub Actions will automatically build and deploy"
+echo "3. Visit Settings → Pages and select 'GitHub Actions' as source"
+echo ""
+echo "🌐 Your site will be available at: https://ranjanchoubey.github.io/sql-notes/"
 else
     echo "📍 Local preview: file://$(pwd)/docs/index.html"
 fi

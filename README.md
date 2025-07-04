@@ -47,19 +47,33 @@ watchmedo shell-command --patterns="*.ipynb;*.md" --recursive --command='./rebui
 
 ## 📚 Deployment
 
-### Manual Deployment
+### Automatic Deployment (Recommended)
+The repository uses GitHub Actions for automatic deployment:
+
+1. **Enable GitHub Pages:**
+   - Go to repository Settings → Pages
+   - Under "Source", select **"GitHub Actions"** (not "Deploy from a branch")
+   - Save the settings
+
+2. **Deploy by pushing:**
+   ```bash
+   git add .
+   git commit -m "Update content"
+   git push origin master
+   ```
+
+3. **Access your book:**
+   - Live site: `https://ranjanchoubey.github.io/sql-notes/`
+   - Check deployment status in the "Actions" tab
+
+### Manual Build (Development)
 ```bash
-# Build and deploy to GitHub Pages
+# Build locally for testing
 ./deploy.sh
 
-# Commit and push
-git add .
-git commit -m "Deploy to GitHub Pages"
-git push origin master  # Changed from main to master
+# Or rebuild during development
+./rebuild.sh
 ```
-
-### Automatic Deployment
-The repository includes GitHub Actions for automatic deployment on every push to master branch.
 
 ## What You'll Learn
 
