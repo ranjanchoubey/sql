@@ -1,5 +1,4 @@
 # Jupyter Book build outputs
-_build/
 .jupyter_cache/
 
 # Python

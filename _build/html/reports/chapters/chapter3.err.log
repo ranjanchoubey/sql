@@ -1,0 +1,210 @@
+Traceback (most recent call last):
+  File "/home/codespace/.local/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 154, in wrapped
+    asyncio.get_running_loop()
+RuntimeError: no running event loop
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 1319, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/jupyter_core/utils/__init__.py", line 158, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/python/3.12.1/lib/python3.12/asyncio/base_events.py", line 684, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/codespace/.local/lib/python3.12/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Advanced Practice Area
+
+# Exercise 1: Most improved employee per department
+print("Exercise 1: Most improved employees by department (2022 vs 2023)")
+query1 = """
+WITH performance_improvement AS (
+    SELECT 
+        e.emp_id,
+        e.first_name || ' ' || e.last_name as full_name,
+        d.dept_name,
+        p2023.performance_score as score_2023,
+        p2022.performance_score as score_2022,
+        p2023.performance_score - p2022.performance_score as improvement,
+        RANK() OVER (PARTITION BY d.dept_name ORDER BY (p2023.performance_score - p2022.performance_score) DESC) as improvement_rank
+    FROM employees e
+    INNER JOIN departments d ON e.dept_id = d.dept_id
+    INNER JOIN employee_performance p2023 ON e.emp_id = p2023.emp_id AND p2023.year = 2023
+    INNER JOIN employee_performance p2022 ON e.emp_id = p2022.emp_id AND p2022.year = 2022
+)
+SELECT 
+    dept_name,
+    full_name,
+    score_2022,
+    score_2023,
+    ROUND(improvement, 2) as improvement
+FROM performance_improvement
+WHERE improvement_rank = 1
+ORDER BY improvement DESC
+"""
+df = pd.read_sql_query(query1, conn)
+display(df)
+
+print("\n" + "="*50 + "\n")
+
+# Exercise 2: Top 25% earners using window functions
+print("Exercise 2: Employees in top 25% salary range")
+query2 = """
+SELECT 
+    e.first_name || ' ' || e.last_name as full_name,
+    d.dept_name,
+    e.salary,
+    NTILE(4) OVER (ORDER BY e.salary DESC) as salary_quartile,
+    PERCENT_RANK() OVER (ORDER BY e.salary DESC) as salary_percentile,
+    ROUND((SELECT AVG(salary) FROM employees), 2) as company_avg
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.dept_id
+WHERE NTILE(4) OVER (ORDER BY e.salary DESC) = 1
+ORDER BY e.salary DESC
+"""
+df = pd.read_sql_query(query2, conn)
+display(df)
+
+print("\n" + "="*50 + "\n")
+
+# Exercise 3: Comprehensive department scorecard
+print("Exercise 3: Department Performance Scorecard")
+query3 = """
+WITH dept_scorecard AS (
+    SELECT 
+        d.dept_name,
+        COUNT(DISTINCT e.emp_id) as employee_count,
+        ROUND(AVG(e.salary), 2) as avg_salary,
+        COUNT(DISTINCT p.project_id) as project_count,
+        COALESCE(SUM(p.budget), 0) as total_budget,
+        ROUND(AVG(perf.performance_score), 2) as avg_performance,
+        SUM(perf.bonus) as total_bonuses,
+        ROUND(COALESCE(SUM(p.budget), 0) / NULLIF(COUNT(DISTINCT e.emp_id), 0), 2) as budget_per_employee
+    FROM departments d
+    LEFT JOIN employees e ON d.dept_id = e.dept_id
+    LEFT JOIN projects p ON d.dept_id = p.dept_id
+    LEFT JOIN employee_performance perf ON e.emp_id = perf.emp_id
+    GROUP BY d.dept_name
+),
+company_benchmarks AS (
+    SELECT 
+        AVG(avg_salary) as company_avg_salary,
+        AVG(avg_performance) as company_avg_performance,
+        AVG(budget_per_employee) as company_avg_budget_per_emp
+    FROM dept_scorecard
+)
+SELECT 
+    ds.dept_name,
+    ds.employee_count,
+    ds.avg_salary,
+    ds.project_count,
+    ds.total_budget,
+    ds.avg_performance,
+    ds.budget_per_employee,
+    CASE 
+        WHEN ds.avg_performance > cb.company_avg_performance * 1.1 THEN 'Excellent'
+        WHEN ds.avg_performance > cb.company_avg_performance * 0.9 THEN 'Good'
+        ELSE 'Needs Improvement'
+    END as performance_rating,
+    CASE 
+        WHEN ds.budget_per_employee > cb.company_avg_budget_per_emp * 1.2 THEN 'High Investment'
+        WHEN ds.budget_per_employee > cb.company_avg_budget_per_emp * 0.8 THEN 'Standard Investment'
+        ELSE 'Low Investment'
+    END as investment_level
+FROM dept_scorecard ds
+CROSS JOIN company_benchmarks cb
+ORDER BY ds.avg_performance DESC, ds.total_budget DESC
+"""
+df = pd.read_sql_query(query3, conn)
+display(df)
+
+# Continue with remaining exercises...
+------------------
+
+----- stdout -----
+Exercise 1: Most improved employees by department (2022 vs 2023)
+----- stdout -----
+
+==================================================
+
+Exercise 2: Employees in top 25% salary range
+------------------
+
+[31m---------------------------------------------------------------------------[39m
+[31mOperationalError[39m                          Traceback (most recent call last)
+[36mFile [39m[32m~/.local/lib/python3.12/site-packages/pandas/io/sql.py:2674[39m, in [36mSQLiteDatabase.execute[39m[34m(self, sql, params)[39m
+[32m   2673[39m [38;5;28;01mtry[39;00m:
+[32m-> [39m[32m2674[39m     [43mcur[49m[43m.[49m[43mexecute[49m[43m([49m[43msql[49m[43m,[49m[43m [49m[43m*[49m[43margs[49m[43m)[49m
+[32m   2675[39m     [38;5;28;01mreturn[39;00m cur
+
+[31mOperationalError[39m: misuse of window function NTILE()
+
+The above exception was the direct cause of the following exception:
+
+[31mDatabaseError[39m                             Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[8][39m[32m, line 50[39m
+[32m     36[39m [38;5;28mprint[39m([33m"[39m[33mExercise 2: Employees in top 25[39m[38;5;132;01m% s[39;00m[33malary range[39m[33m"[39m)
+[32m     37[39m query2 = [33m"""[39m
+[32m     38[39m [33mSELECT [39m
+[32m     39[39m [33m    e.first_name || [39m[33m'[39m[33m [39m[33m'[39m[33m || e.last_name as full_name,[39m
+[32m   (...)[39m[32m     48[39m [33mORDER BY e.salary DESC[39m
+[32m     49[39m [33m"""[39m
+[32m---> [39m[32m50[39m df = [43mpd[49m[43m.[49m[43mread_sql_query[49m[43m([49m[43mquery2[49m[43m,[49m[43m [49m[43mconn[49m[43m)[49m
+[32m     51[39m display(df)
+[32m     53[39m [38;5;28mprint[39m([33m"[39m[38;5;130;01m\n[39;00m[33m"[39m + [33m"[39m[33m=[39m[33m"[39m*[32m50[39m + [33m"[39m[38;5;130;01m\n[39;00m[33m"[39m)
+
+[36mFile [39m[32m~/.local/lib/python3.12/site-packages/pandas/io/sql.py:526[39m, in [36mread_sql_query[39m[34m(sql, con, index_col, coerce_float, params, parse_dates, chunksize, dtype, dtype_backend)[39m
+[32m    523[39m [38;5;28;01massert[39;00m dtype_backend [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m lib.no_default
+[32m    525[39m [38;5;28;01mwith[39;00m pandasSQL_builder(con) [38;5;28;01mas[39;00m pandas_sql:
+[32m--> [39m[32m526[39m     [38;5;28;01mreturn[39;00m [43mpandas_sql[49m[43m.[49m[43mread_query[49m[43m([49m
+[32m    527[39m [43m        [49m[43msql[49m[43m,[49m
+[32m    528[39m [43m        [49m[43mindex_col[49m[43m=[49m[43mindex_col[49m[43m,[49m
+[32m    529[39m [43m        [49m[43mparams[49m[43m=[49m[43mparams[49m[43m,[49m
+[32m    530[39m [43m        [49m[43mcoerce_float[49m[43m=[49m[43mcoerce_float[49m[43m,[49m
+[32m    531[39m [43m        [49m[43mparse_dates[49m[43m=[49m[43mparse_dates[49m[43m,[49m
+[32m    532[39m [43m        [49m[43mchunksize[49m[43m=[49m[43mchunksize[49m[43m,[49m
+[32m    533[39m [43m        [49m[43mdtype[49m[43m=[49m[43mdtype[49m[43m,[49m
+[32m    534[39m [43m        [49m[43mdtype_backend[49m[43m=[49m[43mdtype_backend[49m[43m,[49m
+[32m    535[39m [43m    [49m[43m)[49m
+
+[36mFile [39m[32m~/.local/lib/python3.12/site-packages/pandas/io/sql.py:2738[39m, in [36mSQLiteDatabase.read_query[39m[34m(self, sql, index_col, coerce_float, parse_dates, params, chunksize, dtype, dtype_backend)[39m
+[32m   2727[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mread_query[39m(
+[32m   2728[39m     [38;5;28mself[39m,
+[32m   2729[39m     sql,
+[32m   (...)[39m[32m   2736[39m     dtype_backend: DtypeBackend | Literal[[33m"[39m[33mnumpy[39m[33m"[39m] = [33m"[39m[33mnumpy[39m[33m"[39m,
+[32m   2737[39m ) -> DataFrame | Iterator[DataFrame]:
+[32m-> [39m[32m2738[39m     cursor = [38;5;28;43mself[39;49m[43m.[49m[43mexecute[49m[43m([49m[43msql[49m[43m,[49m[43m [49m[43mparams[49m[43m)[49m
+[32m   2739[39m     columns = [col_desc[[32m0[39m] [38;5;28;01mfor[39;00m col_desc [38;5;129;01min[39;00m cursor.description]
+[32m   2741[39m     [38;5;28;01mif[39;00m chunksize [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+
+[36mFile [39m[32m~/.local/lib/python3.12/site-packages/pandas/io/sql.py:2686[39m, in [36mSQLiteDatabase.execute[39m[34m(self, sql, params)[39m
+[32m   2683[39m     [38;5;28;01mraise[39;00m ex [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01minner_exc[39;00m
+[32m   2685[39m ex = DatabaseError([33mf[39m[33m"[39m[33mExecution failed on sql [39m[33m'[39m[38;5;132;01m{[39;00msql[38;5;132;01m}[39;00m[33m'[39m[33m: [39m[38;5;132;01m{[39;00mexc[38;5;132;01m}[39;00m[33m"[39m)
+[32m-> [39m[32m2686[39m [38;5;28;01mraise[39;00m ex [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01mexc[39;00m
+
+[31mDatabaseError[39m: Execution failed on sql '
+SELECT 
+    e.first_name || ' ' || e.last_name as full_name,
+    d.dept_name,
+    e.salary,
+    NTILE(4) OVER (ORDER BY e.salary DESC) as salary_quartile,
+    PERCENT_RANK() OVER (ORDER BY e.salary DESC) as salary_percentile,
+    ROUND((SELECT AVG(salary) FROM employees), 2) as company_avg
+FROM employees e
+INNER JOIN departments d ON e.dept_id = d.dept_id
+WHERE NTILE(4) OVER (ORDER BY e.salary DESC) = 1
+ORDER BY e.salary DESC
+': misuse of window function NTILE()
+

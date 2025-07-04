@@ -1,0 +1,2135 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1. Advanced SQL Concepts &#8212; SQL Learning Notes</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/advanced-sql';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2. Data Analysis with SQL" href="data-analysis-sql.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="sql-notes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../README.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">SQL Learning Notes</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Advanced SQL Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-analysis-sql.html">2. Data Analysis with SQL</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/ranjanchoubey/sql-notes" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ranjanchoubey/sql-notes/edit/main/notebooks/advanced-sql.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/ranjanchoubey/sql-notes/issues/new?title=Issue%20on%20page%20%2Fnotebooks/advanced-sql.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/advanced-sql.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Advanced SQL Concepts</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#topics-covered">1.1. Topics Covered:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-and-database-connection">1.2. Setup and Database Connection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#window-functions">1.3. 1. Window Functions</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-window-functions">1.3.1. Key Window Functions:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-table-expressions-ctes">1.4. 2. Common Table Expressions (CTEs)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-joins">1.5. 3. Advanced Joins</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#views-and-indexes">1.6. 4. Views and Indexes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-conditional-logic">1.7. 5. Advanced Conditional Logic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practice-exercises-advanced-level">1.8. 6. Practice Exercises - Advanced Level</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-exercise-questions">1.8.1. Advanced Exercise Questions:</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-sql-concepts">
+<h1><span class="section-number">1. </span>Advanced SQL Concepts<a class="headerlink" href="#advanced-sql-concepts" title="Link to this heading">#</a></h1>
+<p>This notebook covers advanced SQL topics that build upon the fundamentals. You’ll learn powerful features used in real-world data analysis and database management.</p>
+<section id="topics-covered">
+<h2><span class="section-number">1.1. </span>Topics Covered:<a class="headerlink" href="#topics-covered" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Window Functions</p></li>
+<li><p>Common Table Expressions (CTEs)</p></li>
+<li><p>Advanced Joins (Self-joins, Cross joins)</p></li>
+<li><p>Views and Indexes</p></li>
+<li><p>Data Types and Constraints</p></li>
+<li><p>Performance Optimization</p></li>
+<li><p>Advanced Aggregations</p></li>
+<li><p>Conditional Logic</p></li>
+</ol>
+</section>
+<section id="setup-and-database-connection">
+<h2><span class="section-number">1.2. </span>Setup and Database Connection<a class="headerlink" href="#setup-and-database-connection" title="Link to this heading">#</a></h2>
+<p>Let’s connect to our existing database and ensure we have the sample data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Connect to the SQLite database</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;my_database.db&#39;</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;my_database.db&#39;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;../my_database.db&#39;</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;../my_database.db&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;my_database.db&#39;</span><span class="p">)</span>
+
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connected to SQLite database successfully!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Database location: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;PRAGMA database_list&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Verify our tables exist</span>
+<span class="n">tables</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT name FROM sqlite_master WHERE type=&#39;table&#39;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Available tables: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Connected to SQLite database successfully!
+Database location: /workspaces/sql-notes/notebooks/my_database.db
+
+Available tables: departments, employees, projects, sales_transactions, performance_reviews
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="window-functions">
+<h2><span class="section-number">1.3. </span>1. Window Functions<a class="headerlink" href="#window-functions" title="Link to this heading">#</a></h2>
+<p>Window functions perform calculations across a set of rows related to the current row, without grouping the result set.</p>
+<section id="key-window-functions">
+<h3><span class="section-number">1.3.1. </span>Key Window Functions:<a class="headerlink" href="#key-window-functions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>ROW_NUMBER()</strong> - Assigns unique numbers to rows</p></li>
+<li><p><strong>RANK()</strong> - Assigns ranks with gaps for ties</p></li>
+<li><p><strong>DENSE_RANK()</strong> - Assigns ranks without gaps</p></li>
+<li><p><strong>LAG()/LEAD()</strong> - Access previous/next row values</p></li>
+<li><p><strong>FIRST_VALUE()/LAST_VALUE()</strong> - Get first/last values in window</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: ROW_NUMBER() - Number employees by salary within each department</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Employee ranking by salary within each department:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    first_name,</span>
+<span class="s2">    last_name,</span>
+<span class="s2">    salary,</span>
+<span class="s2">    dept_id,</span>
+<span class="s2">    ROW_NUMBER() OVER (PARTITION BY dept_id ORDER BY salary DESC) as salary_rank</span>
+<span class="s2">FROM employees</span>
+<span class="s2">ORDER BY dept_id, salary_rank</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: RANK() and DENSE_RANK() comparison</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Comparison of RANK() vs DENSE_RANK():&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    first_name,</span>
+<span class="s2">    last_name,</span>
+<span class="s2">    salary,</span>
+<span class="s2">    RANK() OVER (ORDER BY salary DESC) as rank_with_gaps,</span>
+<span class="s2">    DENSE_RANK() OVER (ORDER BY salary DESC) as dense_rank,</span>
+<span class="s2">    ROW_NUMBER() OVER (ORDER BY salary DESC) as row_number</span>
+<span class="s2">FROM employees</span>
+<span class="s2">ORDER BY salary DESC</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Employee ranking by salary within each department:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>salary</th>
+      <th>dept_id</th>
+      <th>salary_rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>90000</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Robert</td>
+      <td>Wilson</td>
+      <td>88000</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>82000</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>John</td>
+      <td>Doe</td>
+      <td>75000</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Lisa</td>
+      <td>Anderson</td>
+      <td>72000</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>65000</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>David</td>
+      <td>Brown</td>
+      <td>95000</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Emily</td>
+      <td>Davis</td>
+      <td>70000</td>
+      <td>5</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+Comparison of RANK() vs DENSE_RANK():
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>salary</th>
+      <th>rank_with_gaps</th>
+      <th>dense_rank</th>
+      <th>row_number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>David</td>
+      <td>Brown</td>
+      <td>95000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>90000</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Robert</td>
+      <td>Wilson</td>
+      <td>88000</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>82000</td>
+      <td>4</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>John</td>
+      <td>Doe</td>
+      <td>75000</td>
+      <td>5</td>
+      <td>5</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Lisa</td>
+      <td>Anderson</td>
+      <td>72000</td>
+      <td>6</td>
+      <td>6</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Emily</td>
+      <td>Davis</td>
+      <td>70000</td>
+      <td>7</td>
+      <td>7</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>65000</td>
+      <td>8</td>
+      <td>8</td>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 3: LAG() and LEAD() - Compare with previous/next values</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Salary comparison with previous employee:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    first_name,</span>
+<span class="s2">    last_name,</span>
+<span class="s2">    salary,</span>
+<span class="s2">    LAG(salary, 1) OVER (ORDER BY salary) as prev_salary,</span>
+<span class="s2">    salary - LAG(salary, 1) OVER (ORDER BY salary) as salary_diff</span>
+<span class="s2">FROM employees</span>
+<span class="s2">ORDER BY salary</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 4: Running totals with SUM() OVER()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running total of salaries by department:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e.first_name,</span>
+<span class="s2">    e.last_name,</span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    e.salary,</span>
+<span class="s2">    SUM(e.salary) OVER (PARTITION BY e.dept_id ORDER BY e.salary) as running_total</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">JOIN departments d ON e.dept_id = d.dept_id</span>
+<span class="s2">ORDER BY d.dept_name, e.salary</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Salary comparison with previous employee:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>salary</th>
+      <th>prev_salary</th>
+      <th>salary_diff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>65000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Emily</td>
+      <td>Davis</td>
+      <td>70000</td>
+      <td>65000.0</td>
+      <td>5000.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Lisa</td>
+      <td>Anderson</td>
+      <td>72000</td>
+      <td>70000.0</td>
+      <td>2000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>John</td>
+      <td>Doe</td>
+      <td>75000</td>
+      <td>72000.0</td>
+      <td>3000.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>82000</td>
+      <td>75000.0</td>
+      <td>7000.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Robert</td>
+      <td>Wilson</td>
+      <td>88000</td>
+      <td>82000.0</td>
+      <td>6000.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>90000</td>
+      <td>88000.0</td>
+      <td>2000.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>David</td>
+      <td>Brown</td>
+      <td>95000</td>
+      <td>90000.0</td>
+      <td>5000.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+Running total of salaries by department:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>dept_name</th>
+      <th>salary</th>
+      <th>running_total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>John</td>
+      <td>Doe</td>
+      <td>Engineering</td>
+      <td>75000</td>
+      <td>75000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>Engineering</td>
+      <td>82000</td>
+      <td>157000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Robert</td>
+      <td>Wilson</td>
+      <td>Engineering</td>
+      <td>88000</td>
+      <td>245000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Emily</td>
+      <td>Davis</td>
+      <td>Finance</td>
+      <td>70000</td>
+      <td>70000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Sarah</td>
+      <td>Williams</td>
+      <td>Human Resources</td>
+      <td>90000</td>
+      <td>90000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>Marketing</td>
+      <td>65000</td>
+      <td>65000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Lisa</td>
+      <td>Anderson</td>
+      <td>Marketing</td>
+      <td>72000</td>
+      <td>137000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>David</td>
+      <td>Brown</td>
+      <td>Sales</td>
+      <td>95000</td>
+      <td>95000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+<section id="common-table-expressions-ctes">
+<h2><span class="section-number">1.4. </span>2. Common Table Expressions (CTEs)<a class="headerlink" href="#common-table-expressions-ctes" title="Link to this heading">#</a></h2>
+<p>CTEs allow you to define temporary result sets that can be referenced within a SELECT, INSERT, UPDATE, or DELETE statement.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: Basic CTE - Calculate department averages</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Employees above their department average salary:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH dept_averages AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        dept_id,</span>
+<span class="s2">        AVG(salary) as avg_salary</span>
+<span class="s2">    FROM employees</span>
+<span class="s2">    GROUP BY dept_id</span>
+<span class="s2">)</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e.first_name,</span>
+<span class="s2">    e.last_name,</span>
+<span class="s2">    e.salary,</span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    da.avg_salary,</span>
+<span class="s2">    ROUND(e.salary - da.avg_salary, 2) as above_avg</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">JOIN departments d ON e.dept_id = d.dept_id</span>
+<span class="s2">JOIN dept_averages da ON e.dept_id = da.dept_id</span>
+<span class="s2">WHERE e.salary &gt; da.avg_salary</span>
+<span class="s2">ORDER BY above_avg DESC</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Multiple CTEs - Complex analysis</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Department performance analysis:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH dept_stats AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        dept_id,</span>
+<span class="s2">        COUNT(*) as employee_count,</span>
+<span class="s2">        AVG(salary) as avg_salary,</span>
+<span class="s2">        MAX(salary) as max_salary,</span>
+<span class="s2">        MIN(salary) as min_salary</span>
+<span class="s2">    FROM employees</span>
+<span class="s2">    GROUP BY dept_id</span>
+<span class="s2">),</span>
+<span class="s2">project_budgets AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        dept_id,</span>
+<span class="s2">        COUNT(*) as project_count,</span>
+<span class="s2">        SUM(budget) as total_budget</span>
+<span class="s2">    FROM projects</span>
+<span class="s2">    GROUP BY dept_id</span>
+<span class="s2">)</span>
+<span class="s2">SELECT </span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    d.location,</span>
+<span class="s2">    ds.employee_count,</span>
+<span class="s2">    ROUND(ds.avg_salary, 0) as avg_salary,</span>
+<span class="s2">    pb.project_count,</span>
+<span class="s2">    pb.total_budget,</span>
+<span class="s2">    ROUND(pb.total_budget / ds.employee_count, 0) as budget_per_employee</span>
+<span class="s2">FROM departments d</span>
+<span class="s2">LEFT JOIN dept_stats ds ON d.dept_id = ds.dept_id</span>
+<span class="s2">LEFT JOIN project_budgets pb ON d.dept_id = pb.dept_id</span>
+<span class="s2">ORDER BY budget_per_employee DESC</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Employees above their department average salary:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>salary</th>
+      <th>dept_name</th>
+      <th>avg_salary</th>
+      <th>above_avg</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Robert</td>
+      <td>Wilson</td>
+      <td>88000</td>
+      <td>Engineering</td>
+      <td>81666.666667</td>
+      <td>6333.33</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Lisa</td>
+      <td>Anderson</td>
+      <td>72000</td>
+      <td>Marketing</td>
+      <td>68500.000000</td>
+      <td>3500.00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>82000</td>
+      <td>Engineering</td>
+      <td>81666.666667</td>
+      <td>333.33</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+Department performance analysis:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dept_name</th>
+      <th>location</th>
+      <th>employee_count</th>
+      <th>avg_salary</th>
+      <th>project_count</th>
+      <th>total_budget</th>
+      <th>budget_per_employee</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Finance</td>
+      <td>Boston</td>
+      <td>1</td>
+      <td>70000.0</td>
+      <td>1.0</td>
+      <td>200000.0</td>
+      <td>200000.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+      <td>3</td>
+      <td>81667.0</td>
+      <td>2.0</td>
+      <td>450000.0</td>
+      <td>150000.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Sales</td>
+      <td>Los Angeles</td>
+      <td>1</td>
+      <td>95000.0</td>
+      <td>1.0</td>
+      <td>50000.0</td>
+      <td>50000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Marketing</td>
+      <td>Chicago</td>
+      <td>2</td>
+      <td>68500.0</td>
+      <td>1.0</td>
+      <td>75000.0</td>
+      <td>37500.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Human Resources</td>
+      <td>New York</td>
+      <td>1</td>
+      <td>90000.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="advanced-joins">
+<h2><span class="section-number">1.5. </span>3. Advanced Joins<a class="headerlink" href="#advanced-joins" title="Link to this heading">#</a></h2>
+<p>Beyond basic INNER and LEFT joins, let’s explore self-joins and cross joins.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: Self-join - Find employees in the same department</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Employees working in the same department:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e1.first_name || &#39; &#39; || e1.last_name as employee1,</span>
+<span class="s2">    e2.first_name || &#39; &#39; || e2.last_name as employee2,</span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    d.location</span>
+<span class="s2">FROM employees e1</span>
+<span class="s2">JOIN employees e2 ON e1.dept_id = e2.dept_id AND e1.emp_id &lt; e2.emp_id</span>
+<span class="s2">JOIN departments d ON e1.dept_id = d.dept_id</span>
+<span class="s2">ORDER BY d.dept_name, employee1</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Cross join for combinations (be careful with large datasets!)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All possible employee-project combinations (first 10):&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e.first_name || &#39; &#39; || e.last_name as employee,</span>
+<span class="s2">    p.project_name,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN e.dept_id = p.dept_id THEN &#39;Assigned Department&#39;</span>
+<span class="s2">        ELSE &#39;Other Department&#39;</span>
+<span class="s2">    END as assignment_type</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">CROSS JOIN projects p</span>
+<span class="s2">ORDER BY employee, p.project_name</span>
+<span class="s2">LIMIT 10</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Employees working in the same department:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>employee1</th>
+      <th>employee2</th>
+      <th>dept_name</th>
+      <th>location</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Jane Smith</td>
+      <td>Robert Wilson</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>John Doe</td>
+      <td>Jane Smith</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>John Doe</td>
+      <td>Robert Wilson</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Mike Johnson</td>
+      <td>Lisa Anderson</td>
+      <td>Marketing</td>
+      <td>Chicago</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+All possible employee-project combinations (first 10):
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>employee</th>
+      <th>project_name</th>
+      <th>assignment_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>David Brown</td>
+      <td>Financial System Upgrade</td>
+      <td>Other Department</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>David Brown</td>
+      <td>Marketing Campaign Q2</td>
+      <td>Other Department</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>David Brown</td>
+      <td>Mobile App Development</td>
+      <td>Other Department</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>David Brown</td>
+      <td>Sales Training Program</td>
+      <td>Assigned Department</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>David Brown</td>
+      <td>Website Redesign</td>
+      <td>Other Department</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Emily Davis</td>
+      <td>Financial System Upgrade</td>
+      <td>Assigned Department</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Emily Davis</td>
+      <td>Marketing Campaign Q2</td>
+      <td>Other Department</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Emily Davis</td>
+      <td>Mobile App Development</td>
+      <td>Other Department</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Emily Davis</td>
+      <td>Sales Training Program</td>
+      <td>Other Department</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Emily Davis</td>
+      <td>Website Redesign</td>
+      <td>Other Department</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="views-and-indexes">
+<h2><span class="section-number">1.6. </span>4. Views and Indexes<a class="headerlink" href="#views-and-indexes" title="Link to this heading">#</a></h2>
+<p>Views create virtual tables based on queries, while indexes improve query performance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: Create a view for employee details</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating and using a view:&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE VIEW IF NOT EXISTS employee_details AS</span>
+<span class="s2">SELECT </span>
+<span class="s2">    e.emp_id,</span>
+<span class="s2">    e.first_name || &#39; &#39; || e.last_name as full_name,</span>
+<span class="s2">    e.email,</span>
+<span class="s2">    e.salary,</span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    d.location,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN e.salary &gt;= 90000 THEN &#39;Senior&#39;</span>
+<span class="s2">        WHEN e.salary &gt;= 75000 THEN &#39;Mid-level&#39;</span>
+<span class="s2">        ELSE &#39;Junior&#39;</span>
+<span class="s2">    END as level</span>
+<span class="s2">FROM employees e</span>
+<span class="s2">JOIN departments d ON e.dept_id = d.dept_id</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Query the view</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM employee_details ORDER BY salary DESC&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Create an index for better performance</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating index on salary for faster queries:&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE INDEX IF NOT EXISTS idx_employee_salary ON employees(salary)&quot;</span><span class="p">)</span>
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;CREATE INDEX IF NOT EXISTS idx_employee_dept ON employees(dept_id)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Show index information</span>
+<span class="n">indexes</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;SELECT name FROM sqlite_master WHERE type=&#39;index&#39; AND tbl_name=&#39;employees&#39;&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Indexes on employees table:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating and using a view:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>emp_id</th>
+      <th>full_name</th>
+      <th>email</th>
+      <th>salary</th>
+      <th>dept_name</th>
+      <th>location</th>
+      <th>level</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5</td>
+      <td>David Brown</td>
+      <td>david.brown@company.com</td>
+      <td>95000</td>
+      <td>Sales</td>
+      <td>Los Angeles</td>
+      <td>Senior</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>Sarah Williams</td>
+      <td>sarah.williams@company.com</td>
+      <td>90000</td>
+      <td>Human Resources</td>
+      <td>New York</td>
+      <td>Senior</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7</td>
+      <td>Robert Wilson</td>
+      <td>robert.wilson@company.com</td>
+      <td>88000</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+      <td>Mid-level</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>Jane Smith</td>
+      <td>jane.smith@company.com</td>
+      <td>82000</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+      <td>Mid-level</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>John Doe</td>
+      <td>john.doe@company.com</td>
+      <td>75000</td>
+      <td>Engineering</td>
+      <td>San Francisco</td>
+      <td>Mid-level</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>8</td>
+      <td>Lisa Anderson</td>
+      <td>lisa.anderson@company.com</td>
+      <td>72000</td>
+      <td>Marketing</td>
+      <td>Chicago</td>
+      <td>Junior</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>Emily Davis</td>
+      <td>emily.davis@company.com</td>
+      <td>70000</td>
+      <td>Finance</td>
+      <td>Boston</td>
+      <td>Junior</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>Mike Johnson</td>
+      <td>mike.johnson@company.com</td>
+      <td>65000</td>
+      <td>Marketing</td>
+      <td>Chicago</td>
+      <td>Junior</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+Creating index on salary for faster queries:
+Indexes on employees table:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>sqlite_autoindex_employees_1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>idx_employee_salary</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>idx_employee_dept</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="advanced-conditional-logic">
+<h2><span class="section-number">1.7. </span>5. Advanced Conditional Logic<a class="headerlink" href="#advanced-conditional-logic" title="Link to this heading">#</a></h2>
+<p>Using CASE statements and conditional aggregations for complex business logic.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example 1: Complex CASE statements</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Employee categorization with multiple conditions:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    first_name || &#39; &#39; || last_name as employee,</span>
+<span class="s2">    salary,</span>
+<span class="s2">    hire_date,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN salary &gt;= 90000 AND hire_date &lt; &#39;2020-01-01&#39; THEN &#39;Senior Veteran&#39;</span>
+<span class="s2">        WHEN salary &gt;= 90000 THEN &#39;Senior New Hire&#39;</span>
+<span class="s2">        WHEN salary &gt;= 75000 AND hire_date &lt; &#39;2020-01-01&#39; THEN &#39;Mid-level Veteran&#39;</span>
+<span class="s2">        WHEN salary &gt;= 75000 THEN &#39;Mid-level New Hire&#39;</span>
+<span class="s2">        ELSE &#39;Junior Level&#39;</span>
+<span class="s2">    END as employee_category,</span>
+<span class="s2">    CASE </span>
+<span class="s2">        WHEN salary &gt; (SELECT AVG(salary) FROM employees) THEN &#39;Above Average&#39;</span>
+<span class="s2">        ELSE &#39;Below Average&#39;</span>
+<span class="s2">    END as salary_comparison</span>
+<span class="s2">FROM employees</span>
+<span class="s2">ORDER BY salary DESC</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Conditional aggregations (pivot-like behavior)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Department salary distribution:&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    COUNT(*) as total_employees,</span>
+<span class="s2">    SUM(CASE WHEN e.salary &gt;= 90000 THEN 1 ELSE 0 END) as senior_count,</span>
+<span class="s2">    SUM(CASE WHEN e.salary BETWEEN 75000 AND 89999 THEN 1 ELSE 0 END) as mid_count,</span>
+<span class="s2">    SUM(CASE WHEN e.salary &lt; 75000 THEN 1 ELSE 0 END) as junior_count,</span>
+<span class="s2">    ROUND(AVG(CASE WHEN e.salary &gt;= 90000 THEN e.salary END), 0) as avg_senior_salary</span>
+<span class="s2">FROM departments d</span>
+<span class="s2">LEFT JOIN employees e ON d.dept_id = e.dept_id</span>
+<span class="s2">GROUP BY d.dept_id, d.dept_name</span>
+<span class="s2">ORDER BY total_employees DESC</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Employee categorization with multiple conditions:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>employee</th>
+      <th>salary</th>
+      <th>hire_date</th>
+      <th>employee_category</th>
+      <th>salary_comparison</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>David Brown</td>
+      <td>95000</td>
+      <td>2018-11-12</td>
+      <td>Senior Veteran</td>
+      <td>Above Average</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Sarah Williams</td>
+      <td>90000</td>
+      <td>2020-09-05</td>
+      <td>Senior New Hire</td>
+      <td>Above Average</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Robert Wilson</td>
+      <td>88000</td>
+      <td>2019-08-17</td>
+      <td>Mid-level Veteran</td>
+      <td>Above Average</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Jane Smith</td>
+      <td>82000</td>
+      <td>2019-03-22</td>
+      <td>Mid-level Veteran</td>
+      <td>Above Average</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>John Doe</td>
+      <td>75000</td>
+      <td>2020-01-15</td>
+      <td>Mid-level New Hire</td>
+      <td>Below Average</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Lisa Anderson</td>
+      <td>72000</td>
+      <td>2021-04-03</td>
+      <td>Junior Level</td>
+      <td>Below Average</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Emily Davis</td>
+      <td>70000</td>
+      <td>2022-02-28</td>
+      <td>Junior Level</td>
+      <td>Below Average</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Mike Johnson</td>
+      <td>65000</td>
+      <td>2021-06-10</td>
+      <td>Junior Level</td>
+      <td>Below Average</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+Department salary distribution:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dept_name</th>
+      <th>total_employees</th>
+      <th>senior_count</th>
+      <th>mid_count</th>
+      <th>junior_count</th>
+      <th>avg_senior_salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Engineering</td>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Marketing</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Human Resources</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>90000.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Sales</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>95000.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Finance</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="practice-exercises-advanced-level">
+<h2><span class="section-number">1.8. </span>6. Practice Exercises - Advanced Level<a class="headerlink" href="#practice-exercises-advanced-level" title="Link to this heading">#</a></h2>
+<p>Test your understanding with these challenging exercises!</p>
+<section id="advanced-exercise-questions">
+<h3><span class="section-number">1.8.1. </span>Advanced Exercise Questions:<a class="headerlink" href="#advanced-exercise-questions" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Window Function Challenge</strong>: Find the 2nd highest paid employee in each department</p></li>
+<li><p><strong>CTE Challenge</strong>: Calculate the percentage of total company salary each department represents</p></li>
+<li><p><strong>Self-Join Challenge</strong>: Find pairs of employees with salary differences less than $5,000</p></li>
+<li><p><strong>Performance Analysis</strong>: Create a view showing project ROI (budget per employee in department)</p></li>
+<li><p><strong>Complex Aggregation</strong>: Show month-over-month hiring trends (extract month from hire_date)</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Advanced Practice Area - Try the exercises above!</span>
+
+<span class="c1"># Solution 1: 2nd highest paid employee in each department</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solution 1: 2nd highest paid employee in each department&quot;</span><span class="p">)</span>
+<span class="n">query1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT </span>
+<span class="s2">    first_name,</span>
+<span class="s2">    last_name,</span>
+<span class="s2">    salary,</span>
+<span class="s2">    dept_id,</span>
+<span class="s2">    salary_rank</span>
+<span class="s2">FROM (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        first_name,</span>
+<span class="s2">        last_name,</span>
+<span class="s2">        salary,</span>
+<span class="s2">        dept_id,</span>
+<span class="s2">        RANK() OVER (PARTITION BY dept_id ORDER BY salary DESC) as salary_rank</span>
+<span class="s2">    FROM employees</span>
+<span class="s2">) ranked</span>
+<span class="s2">WHERE salary_rank = 2</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query1</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Solution 2: Department salary percentage of total</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Solution 2: Department salary as percentage of total company&quot;</span><span class="p">)</span>
+<span class="n">query2</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH company_total AS (</span>
+<span class="s2">    SELECT SUM(salary) as total_salary FROM employees</span>
+<span class="s2">),</span>
+<span class="s2">dept_totals AS (</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        dept_id,</span>
+<span class="s2">        SUM(salary) as dept_salary</span>
+<span class="s2">    FROM employees</span>
+<span class="s2">    GROUP BY dept_id</span>
+<span class="s2">)</span>
+<span class="s2">SELECT </span>
+<span class="s2">    d.dept_name,</span>
+<span class="s2">    dt.dept_salary,</span>
+<span class="s2">    ct.total_salary,</span>
+<span class="s2">    ROUND((dt.dept_salary * 100.0 / ct.total_salary), 2) as percentage_of_total</span>
+<span class="s2">FROM departments d</span>
+<span class="s2">JOIN dept_totals dt ON d.dept_id = dt.dept_id</span>
+<span class="s2">CROSS JOIN company_total ct</span>
+<span class="s2">ORDER BY percentage_of_total DESC</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query2</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Add your solutions for exercises 3-5 here!</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solution 1: 2nd highest paid employee in each department
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>salary</th>
+      <th>dept_id</th>
+      <th>salary_rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Jane</td>
+      <td>Smith</td>
+      <td>82000</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Mike</td>
+      <td>Johnson</td>
+      <td>65000</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>==================================================
+
+Solution 2: Department salary as percentage of total company
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>dept_name</th>
+      <th>dept_salary</th>
+      <th>total_salary</th>
+      <th>percentage_of_total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Engineering</td>
+      <td>245000</td>
+      <td>637000</td>
+      <td>38.46</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Marketing</td>
+      <td>137000</td>
+      <td>637000</td>
+      <td>21.51</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Sales</td>
+      <td>95000</td>
+      <td>637000</td>
+      <td>14.91</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Human Resources</td>
+      <td>90000</td>
+      <td>637000</td>
+      <td>14.13</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Finance</td>
+      <td>70000</td>
+      <td>637000</td>
+      <td>10.99</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cleanup</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Advanced SQL concepts completed!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remember to practice these concepts with your own datasets.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Next: Try the Data Analysis with SQL notebook for real-world applications!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Note: Keep connection open for other notebooks</span>
+<span class="c1"># conn.close() would be called at the very end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Advanced SQL concepts completed!
+Remember to practice these concepts with your own datasets.
+Next: Try the Data Analysis with SQL notebook for real-world applications!
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cleanup</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Advanced SQL concepts completed!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Remember to practice these concepts with your own datasets.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Next: Try the Data Analysis with SQL notebook for real-world applications!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Note: Keep connection open for other notebooks</span>
+<span class="c1"># conn.close() would be called at the very end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Advanced SQL concepts completed!
+Remember to practice these concepts with your own datasets.
+Next: Try the Data Analysis with SQL notebook for real-world applications!
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="sql-notes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="data-analysis-sql.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Data Analysis with SQL</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ranjan Kumar Choubey
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
