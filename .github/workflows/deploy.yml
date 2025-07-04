@@ -39,7 +39,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         
-        # Add and commit
-        git add docs/
+        # Force add docs folder (ignore .gitignore)
+        git add -f docs/
         git commit -m "Deploy to GitHub Pages" || exit 0
         git push
