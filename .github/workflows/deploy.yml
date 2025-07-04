@@ -5,23 +5,31 @@ on:
   push:
     branches:
     - main
-
   pull_request:
     branches:
     - main
 
-# This job installs dependencies, build the book, and pushes it to `gh-pages`
+# This job installs dependencies, builds the book, and pushes it to `gh-pages`
 jobs:
   deploy-book:
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     # Install dependencies
-    - name: Set up Python 3.9
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version: "3.11"
 
     - name: Install dependencies
       run: |
@@ -32,30 +40,26 @@ jobs:
       run: |
         jupyter-book build .
 
-    # Push the book's HTML to github-pages
-    - name: GitHub Pages action
-      uses: peaceiris/actions-gh-pages@v3
-      if: ${{ github.event_name == 'push' }}
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./_build/html
-        jupyter-book build .
-
+    # Deploy to GitHub Pages (only on main branch)
     - name: Setup Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: actions/configure-pages@v3
 
     - name: Upload artifact
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: actions/upload-pages-artifact@v2
       with:
         path: ./_build/html
 
-  # Deployment job
-  deploy:
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      id: deployment
+      uses: actions/deploy-pages@v2
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: deploy-book
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
