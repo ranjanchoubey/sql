@@ -4,7 +4,7 @@ A comprehensive Jupyter Book for learning SQL with hands-on examples using SQLit
 Lets start
 
 ## 🌐 Live Book
-📖 **[View the Live Book](https://yourusername.github.io/sql-notes/)**
+📖 **[View the Live Book](https://ranjanchoubey.github.io/sql)**
 
 ## 🚀 Quick Start (GitHub Codespaces)
 

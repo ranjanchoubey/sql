@@ -39,6 +39,8 @@ show_help() {
     echo "  setup     - Initial setup (install dependencies, first build)"
     echo "  build     - Build the Jupyter Book"
     echo "  serve     - Start local development server"
+    echo "  start     - Build and serve (recommended for development)"
+    echo "  fix       - Fix dependency issues and rebuild"
     echo "  clean     - Clean build artifacts"
     echo "  deploy    - Prepare for GitHub Pages deployment"
     echo "  watch     - Watch for changes and auto-rebuild (requires watchdog)"
@@ -46,9 +48,39 @@ show_help() {
     echo ""
     echo "Examples:"
     echo "  ./dev.sh setup    # First time setup"
-    echo "  ./dev.sh build    # Rebuild after changes"
-    echo "  ./dev.sh serve    # Start local server"
+    echo "  ./dev.sh start    # Build and serve (most common)"
+    echo "  ./dev.sh build    # Just rebuild"
+    echo "  ./dev.sh fix      # Fix dependency issues"
     echo ""
+}
+
+# Function to fix dependency issues
+fix_dependencies() {
+    print_status "Checking and fixing Python dependencies..."
+    
+    # Check if we need to fix psutil and pygments issues
+    if ! python -c "import psutil; psutil.Process()" 2>/dev/null; then
+        print_warning "Fixing psutil installation..."
+        pip uninstall -y psutil
+        pip install psutil
+    fi
+    
+    if ! python -c "import pygments.util" 2>/dev/null; then
+        print_warning "Fixing pygments installation..."
+        pip uninstall -y pygments
+        pip install pygments
+    fi
+    
+    # Force reinstall problematic packages
+    print_status "Ensuring all Jupyter Book dependencies are properly installed..."
+    pip install --upgrade --force-reinstall jupyter-book nbclient ipykernel
+    
+    # Install/upgrade requirements
+    if [ -f "requirements.txt" ]; then
+        pip install -r requirements.txt --upgrade
+    fi
+    
+    print_success "Dependencies fixed!"
 }
 
 # Function for initial setup
@@ -57,7 +89,7 @@ setup() {
     
     # Install Python dependencies
     print_status "Installing Python dependencies..."
-    pip install -r requirements.txt
+    fix_dependencies
     
     # Build the book for the first time
     print_status "Building Jupyter Book for the first time..."
@@ -67,9 +99,10 @@ setup() {
     
     if [ ! -z "$CODESPACE_NAME" ]; then
         echo ""
-        print_status "🌐 Codespace URLs:"
-        echo "   • Live Server: https://$CODESPACE_NAME-5500.app.github.dev/_build/html/"
-        echo "   • Python Server: Run './dev.sh serve' then visit https://$CODESPACE_NAME-8000.app.github.dev/"
+        print_status "🌐 Access your book:"
+        echo "   • Run './dev.sh serve' to start server"
+        echo "   • Then visit: https://$CODESPACE_NAME-8000.app.github.dev/README.html"
+        echo "   • Direct file: Open _build/html/README.html in browser"
     else
         echo ""
         print_status "📍 Local development:"
@@ -93,20 +126,81 @@ build() {
     rm -rf _build/
     
     # Build the book
-    jupyter-book build . --all
-    
-    if [ $? -eq 0 ]; then
+    if jupyter-book build . --all; then
         print_success "Build complete!"
         
         if [ ! -z "$CODESPACE_NAME" ]; then
-            echo "🌐 Preview: https://$CODESPACE_NAME-5500.app.github.dev/_build/html/"
+            echo ""
+            print_status "🌐 To view your book:"
+            echo "   • Run './dev.sh serve' to start server"
+            echo "   • Then visit: https://$CODESPACE_NAME-8000.app.github.dev/README.html"
         else
-            echo "📍 Local: file://$(pwd)/_build/html/index.html"
+            echo ""
+            print_status "📍 To view your book:"
+            echo "   • Direct file: file://$(pwd)/_build/html/README.html"
+            echo "   • Or run './dev.sh serve' then visit http://localhost:8000/README.html"
         fi
     else
-        print_error "Build failed!"
-        exit 1
+        print_error "Build failed! Trying safe build..."
+        safe_build
     fi
+}
+
+# Function to safely build with error handling
+safe_build() {
+    print_status "Building Jupyter Book with error recovery..."
+    
+    # Clean previous build to ensure fresh start
+    rm -rf _build/
+    rm -rf .jupyter_cache/
+    
+    # Try building with different strategies if first attempt fails
+    local build_attempts=0
+    local max_attempts=3
+    
+    while [ $build_attempts -lt $max_attempts ]; do
+        build_attempts=$((build_attempts + 1))
+        print_status "Build attempt $build_attempts of $max_attempts..."
+        
+        if jupyter-book build . --all; then
+            print_success "Build successful!"
+            
+            if [ ! -z "$CODESPACE_NAME" ]; then
+                echo ""
+                print_status "🌐 To view your book:"
+                echo "   • Run './dev.sh serve' to start server"
+                echo "   • Then visit: https://$CODESPACE_NAME-8000.app.github.dev/README.html"
+            fi
+            return 0
+        else
+            print_warning "Build attempt $build_attempts failed"
+            
+            if [ $build_attempts -eq 1 ]; then
+                print_status "Attempting to fix dependencies..."
+                fix_dependencies
+            elif [ $build_attempts -eq 2 ]; then
+                print_status "Trying build without executing notebooks..."
+                if jupyter-book build . --all --builder html; then
+                    print_success "Build successful (without execution)!"
+                    
+                    if [ ! -z "$CODESPACE_NAME" ]; then
+                        echo ""
+                        print_status "🌐 To view your book:"
+                        echo "   • Run './dev.sh serve' to start server"
+                        echo "   • Then visit: https://$CODESPACE_NAME-8000.app.github.dev/README.html"
+                    fi
+                    return 0
+                fi
+            fi
+        fi
+    done
+    
+    print_error "All build attempts failed!"
+    print_status "Possible solutions:"
+    echo "   1. Run './dev.sh clean' then './dev.sh setup'"
+    echo "   2. Check your notebook cells for errors"
+    echo "   3. Try building individual chapters"
+    return 1
 }
 
 # Function to serve locally
@@ -123,11 +217,11 @@ serve() {
     
     if [ ! -z "$CODESPACE_NAME" ]; then
         echo ""
-        print_success "🌐 Server running at: https://$CODESPACE_NAME-8000.app.github.dev/"
+        print_success "🌐 Server running at: https://$CODESPACE_NAME-8000.app.github.dev/README.html"
         python -m http.server 8000 --bind 0.0.0.0
     else
         echo ""
-        print_success "🌐 Server running at: http://localhost:8000"
+        print_success "🌐 Server running at: http://localhost:8000/README.html"
         python -m http.server 8000
     fi
 }
@@ -175,16 +269,85 @@ watch() {
         .
 }
 
+# Function to build and serve in one command
+start() {
+    print_status "Building and serving Jupyter Book..."
+    
+    # Clean previous build to ensure fresh start
+    rm -rf _build/
+    
+    # Build the book
+    if jupyter-book build . --all; then
+        print_success "Build complete! Starting server..."
+        
+        if [ ! -d "_build/html" ]; then
+            print_error "Build directory not found!"
+            return 1
+        fi
+        
+        print_status "Starting local development server..."
+        print_status "Press Ctrl+C to stop the server"
+        
+        cd _build/html
+        
+        if [ ! -z "$CODESPACE_NAME" ]; then
+            echo ""
+            print_success "🌐 Your book is ready at: https://$CODESPACE_NAME-8000.app.github.dev/README.html"
+            echo ""
+            print_status "📝 Development workflow:"
+            echo "   • Edit your notebooks in chapters/ folder"
+            echo "   • Ctrl+C to stop server, then run './dev.sh start' to rebuild and serve"
+            echo ""
+            python -m http.server 8000 --bind 0.0.0.0
+        else
+            echo ""
+            print_success "🌐 Your book is ready at: http://localhost:8000/README.html"
+            echo ""
+            print_status "📝 Development workflow:"
+            echo "   • Edit your notebooks in chapters/ folder"
+            echo "   • Ctrl+C to stop server, then run './dev.sh start' to rebuild and serve"
+            echo ""
+            python -m http.server 8000
+        fi
+    else
+        print_error "Build failed! Trying safe build..."
+        safe_build
+        
+        # If safe build succeeds, start server
+        if [ $? -eq 0 ] && [ -d "_build/html" ]; then
+            print_status "Starting server after successful recovery build..."
+            cd _build/html
+            
+            if [ ! -z "$CODESPACE_NAME" ]; then
+                echo ""
+                print_success "🌐 Your book is ready at: https://$CODESPACE_NAME-8000.app.github.dev/README.html"
+                python -m http.server 8000 --bind 0.0.0.0
+            else
+                echo ""
+                print_success "🌐 Your book is ready at: http://localhost:8000/README.html"
+                python -m http.server 8000
+            fi
+        fi
+    fi
+}
+
 # Main script logic
 case "${1:-help}" in
     setup)
         setup
+        ;;
+    start)
+        start
         ;;
     build)
         build
         ;;
     serve)
         serve
+        ;;
+    fix)
+        fix_dependencies
+        build
         ;;
     clean)
         clean
