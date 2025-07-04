@@ -1,7 +1,6 @@
 jupyter-book>=0.15.1
 matplotlib
 pandas
-sqlite3
 ipython
 watchdog
 ghp-import
